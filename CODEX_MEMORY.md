@@ -142,9 +142,8 @@ When continuing work in this repository, read this file first.
 
 ## Working Tree Notes
 - Current project work now includes frontend scaffold/build-out in addition to PRD iteration.
-- The current frontend scaffold, PRD updates, and project notes have been pushed to `origin/main`.
-- Only `CODEX_MEMORY.md` has a new local sync update after that push.
-- The backend implementation, frontend API integration, and AI pipeline modules now exist in the repository worktree and are part of the current review baseline.
+- The current frontend scaffold, frontend API integration, backend implementation, RSS support, and AI pipeline modules have now been pushed to `origin/main`.
+- The backend implementation, frontend API integration, and AI pipeline modules now define the active repository baseline for future reviews.
 - The backend now also includes `backend/app/api/v1/rss.py` and `backend/.gitignore`.
 - The backend now also includes pipeline-related service modules under `backend/app/services/`:
   - `crawler.py`
@@ -156,6 +155,7 @@ When continuing work in this repository, read this file first.
 - On 2026-03-23, the user requested pushing the current PRD/frontend updates to GitHub.
 - The requested commit message language is Chinese.
 - The main push has been completed successfully.
+- On 2026-03-24, the user requested pushing the latest frontend/backend/API/pipeline work, and that push has also completed successfully.
 
 ## Memory Maintenance Rule
 - At the end of each future conversation turn in this project, update `CODEX_MEMORY.md` if the project state, review conclusions, or collaboration rules have materially changed.

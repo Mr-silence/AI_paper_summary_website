@@ -1,0 +1,31 @@
+/* 
+  Global Styles for AI Paper Summary Website
+  Cleaned from default Vite template styles to avoid conflicts
+*/
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  background-color: #f5f7fa;
+  color: #303133;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Reset link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  color: #409eff;
+}
+
+/* Common layout constraints */
+* {
+  box-sizing: border-box;
+}

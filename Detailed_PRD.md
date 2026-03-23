@@ -34,15 +34,16 @@
 ## 4. 前端详细设计 (Vue 3 + Element Plus)
 
 ### 4.1 整体布局 (Layout)
-*   **Header (顶栏)**: 包含产品 Logo（左侧）、导航菜单（首页、往期归档、关于）、功能区（RSS订阅图标、邮件订阅按钮）。Element组件：`<el-menu>`, `<el-button>`, `<el-dialog>`。
+*   **Header (顶栏)**: 包含产品 Logo（左侧）、唯一导航菜单（首页），以及功能区（邮件订阅按钮）。Element组件：`<el-menu>`, `<el-button>`, `<el-dialog>`。
 *   **Footer (底栏)**: 版权信息、免责声明、GitHub源码链接等。
 *   **Main (内容区)**: 基于 `<router-view>` 进行页面切换，配合 `<el-main>` 容器，最大宽度限制为 `800px`。
 
 ### 4.2 页面清单与细节
 #### 4.2.1 首页 (Home - `/`)
-*   **功能**: 展示“最新一期”或“指定期号”的 3-5 篇论文简报。
+*   **功能**: 以 Feed 流的形式展示论文简报，按发布日期降序排列。
 *   **交互**:
-    *   **日期切换器**: 顶部提供 `<el-date-picker>` 或左右箭头，按 `issue_date` 切换。
+    *   **分组展示**: 数据按照 `issue_date` 进行分组，每个日期作为一个组的标题（如分隔线），组内展示当天的 3-5 篇简报。
+    *   **分页模块**: 底部提供页码切换器 (`<el-pagination>`)，每次切换翻页时更新 URL 参数 `?page=x` 并刷新数据。
     *   **简报列表**: `<el-card>` 循环渲染。
 *   **卡片设计**:
     *   **一句话总结**: 大字号加粗，高亮显示。
@@ -60,11 +61,7 @@
         3.  **🚀 应用场景**。
     *   底部：`<el-collapse>` 内含原论文的英文摘要 (Abstract) 和 PDF 链接。
 
-#### 4.2.3 往期归档页 (Archive - `/archive`)
-*   **功能**: 以时间轴或日历视图展示历史简报记录。
-*   **交互**: 点击某一天，跳转至 `/?issue_date=YYYY-MM-DD`。
-
-#### 4.2.4 邮件订阅与退订 (Security & Double Opt-in)
+#### 4.2.3 邮件订阅与退订 (Security & Double Opt-in)
 *   **订阅弹窗**: 输入 Email，点击提交。系统提示：“验证邮件已发送，请前往邮箱点击确认链接完成订阅”。
 *   **退订页面 (`/unsubscribe`)**: 接收 URL 上的 `token` 参数，页面加载后自动调用后端退订接口，展示成功或失效的反馈。
 
@@ -136,27 +133,32 @@
 }
 ```
 
-### 6.1 获取指定日期的简报列表
+### 6.1 获取简报列表 (Feed 流)
 *   **接口**: `GET /api/v1/papers`
-*   **参数**: `issue_date` (Query, 格式 `YYYY-MM-DD`, 不传默认取系统最新一期的 date)
+*   **参数**: 
+    *   `page` (Query, 整数，默认为 1)
+    *   `limit` (Query, 整数，默认为 10，代表返回多少篇简报)
 *   **响应**:
 ```json
 {
   "code": 200,
   "msg": "success",
-  "data": [
-    {
-      "id": 101,
-      "arxiv_id": "2310.12345",
-      "title": "Attention Is All You Need",
-      "one_line_summary": "提出了一种完全基于注意力机制的网络架构，摒弃了传统的RNN和CNN。",
-      "core_highlights": [
-        "并行计算效率高",
-        "长距离依赖处理好"
-      ],
-      "issue_date": "2023-10-25"
-    }
-  ]
+  "data": {
+    "total": 500,  // 总篇数，用于前端分页
+    "items": [
+      {
+        "id": 101,
+        "arxiv_id": "2310.12345",
+        "title": "Attention Is All You Need",
+        "one_line_summary": "提出了一种完全基于注意力机制的网络架构...",
+        "core_highlights": [
+          "并行计算效率高",
+          "长距离依赖处理好"
+        ],
+        "issue_date": "2023-10-25"
+      }
+    ]
+  }
 }
 ```
 

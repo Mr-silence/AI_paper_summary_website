@@ -7,6 +7,8 @@ When continuing work in this repository, read this file first.
 ## Working Scope
 - Primary role: review requirement documents, code, and implementation plans.
 - Secondary role: perform the final Git commit/push after the user explicitly asks for it.
+- Hard boundary: Codex only works on review and final commit/push in this project.
+- File edit boundary: the only project file Codex may modify is `CODEX_MEMORY.md`; no other project file may be edited by Codex.
 - Default review style: findings first, ordered by severity, then assumptions/questions, then a short summary.
 
 ## Current Repository State
@@ -14,7 +16,7 @@ When continuing work in this repository, read this file first.
 - Project path: `/Users/zhangshijie/Desktop/Project/AI_paper_summary_website`
 - Git repository initialized locally on branch `main`.
 - Initial commit created: `1563259` (`chore: initialize project repository`)
-- Latest pushed commit: `47c560a` (`文档：完善 PRD 并补充 AI 工作流提示词`)
+- Latest pushed commit: `c622c4d` (`文档：同步 Codex 记忆文件`)
 - Global Git identity detected:
   - `user.name = Zhang Shijie`
   - `user.email = z1332556430@gmail.com`
@@ -23,12 +25,30 @@ When continuing work in this repository, read this file first.
 - Git protocol: `https`
 
 ## Latest Review Target
-- File reviewed: `Detailed_PRD.md`
+- Files reviewed:
+  - `frontend/src/main.js`
+  - `frontend/src/router/index.js`
+  - `frontend/src/App.vue`
+  - `frontend/src/views/Home.vue`
+  - `frontend/src/views/Detail.vue`
+  - `frontend/src/views/Unsubscribe.vue`
+  - `frontend/src/style.css`
+  - `frontend/package.json`
 
 ## Latest PRD Status
 - The PRD has gone through multiple review rounds and is now considered implementation-ready.
 - The latest review did not produce new substantive findings.
 - The current design direction is stable enough to start building.
+- The frontend-facing PRD has been updated from date-switching homepage behavior to a feed-style homepage with `page`/`limit` pagination.
+
+## Latest Frontend Review Status
+- The frontend scaffold can build successfully with Vite.
+- The earlier scaffold issues around global icon registration and leftover Vite template CSS have been corrected.
+- After re-reading the updated PRD, the previous frontend findings about `issue_date` homepage queries and the dedicated archive page are no longer valid in their old form.
+- The current frontend implementation is broadly aligned with the updated PRD's feed + pagination direction.
+- There is still one document/code alignment caveat: PRD section 4.1 header wording still mentions archive/about/RSS navigation, while the actual current frontend header only exposes home + email subscription.
+- The previous race-condition issue in homepage pagination has been fixed by adding stale-response protection.
+- Build verification still passes, but Vite continues to warn that the main production chunk is larger than 500 kB.
 
 ## Review Progress Summary
 - Early review rounds identified major gaps in:
@@ -74,6 +94,8 @@ When continuing work in this repository, read this file first.
 ## Collaboration Notes From User
 - User requested a Codex-only Markdown file under this project for persistent work summary/context.
 - User expects Codex to focus on review work in this project and do the final Git commit/upload at the end.
+- User added a hard constraint: Codex's work scope is limited to review and commit/push only.
+- User added a hard constraint: Codex must not edit any project file other than `CODEX_MEMORY.md`.
 - User requested repository initialization and GitHub repository creation/push.
 - User explicitly wants this memory file to be kept up to date after each conversation turn in this project.
 
@@ -89,14 +111,16 @@ When continuing work in this repository, read this file first.
 - Local branch `main` is tracking `origin/main`
 
 ## Working Tree Notes
-- Current project work is still PRD-centric.
-- The latest documentation and prompt updates have already been pushed to `origin/main`.
-- Remaining local-only file at the moment: `hf_response.json` (empty scratch file, not part of deliverables).
+- Current project work now includes frontend scaffold/build-out in addition to PRD iteration.
+- Current delivery set pending push includes:
+  - updated `Detailed_PRD.md`
+  - frontend Vite/Vue scaffold files under `frontend/`
+  - updated `geminicli.md`
+  - updated `CODEX_MEMORY.md`
 
 ## Latest Git Action Request
-- On 2026-03-23, the user requested pushing the current documentation/prompt work to GitHub.
+- On 2026-03-23, the user requested pushing the current PRD/frontend updates to GitHub.
 - The requested commit message language is Chinese.
-- The push has been completed successfully.
 
 ## Memory Maintenance Rule
 - At the end of each future conversation turn in this project, update `CODEX_MEMORY.md` if the project state, review conclusions, or collaboration rules have materially changed.

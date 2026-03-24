@@ -287,3 +287,305 @@ When continuing work in this repository, read this file first.
     - community popularity buckets are written as `10-50`, `50-100`, `100+`
     - boundary inclusion at `50` and `100` is not explicitly defined
   - `direction` is modeled as a first-class field and API filter, but the PRD still does not define a canonical taxonomy or enum list for it
+
+## Latest Turn Note (2026-03-24)
+- User repeated the request to review the PRD after restating the same "single source of truth" claim.
+- Re-checked the current `Detailed_PRD.md`; the document content is unchanged from the immediately previous PRD-only review.
+- Review conclusion for this turn is unchanged:
+  - continue using the PRD-only design findings already recorded above
+
+## Latest PRD-Only Review (2026-03-24, v2.4)
+- Re-reviewed `Detailed_PRD.md` v2.4 strictly as a PRD/design artifact.
+- The prior design issues around history traceability, publishability thresholds, token-lifecycle separation, interval ambiguity, and direction taxonomy definition have been materially improved.
+- Remaining design findings:
+  - Stage-1 Editor contract is still internally inconsistent:
+    - section 4.1 says the system first slices candidates into Focus Top 5 and Watching Next 12 groups
+    - but it then says the Editor outputs Focus (3-5) and Watching (8-12) lists
+    - the same section only provides a per-paper regex, not a category-carrying output shape
+  - The `paper_summary` table still mixes issue snapshot state with narrative content in a way that leaves candidate-row representation under-specified:
+    - the PRD keeps `category = candidate` in the same table that stores bilingual summaries
+    - but it does not define whether unselected candidates have nullable/empty/absent narrative fields
+  - The quality baseline still under-specifies low-supply behavior before review attrition:
+    - it defines failure when Reviewer removals drop counts below thresholds
+    - but it does not state what happens when the pipeline never has enough viable Focus/Watching candidates in the first place
+  - The API chapter still is not actually full coverage at the PRD level:
+    - it omits explicit contracts for paper detail retrieval, subscription verification redirect, and RSS despite the user claiming full API closure
+  - Direction taxonomy now exists, but assignment policy is still unspecified:
+    - there is still no precedence or tie-break rule for papers that fit multiple directions
+
+## Latest PRD-Only Review (2026-03-24, v2.5)
+- Re-reviewed `Detailed_PRD.md` v2.5 strictly as a PRD/design artifact.
+- The prior issues around Editor call mode, low-supply precheck, API surface coverage, and taxonomy precedence have been materially improved.
+- Remaining design findings:
+  - The category model is still internally inconsistent:
+    - the quality baseline and low-supply policy define Focus/Watching supply with score thresholds (`Score >= 80`, `Score >= 50`)
+    - but the same PRD also defines Focus and Watching as capped editorial batches (`[3,5]` and `[8,12]`) selected from top candidates
+    - this leaves no deterministic rule when threshold-qualified papers exceed or conflict with the capped batch sizes
+  - The scoring-engine spec has regressed from a full 8-signal contract to only partial rules:
+    - the PRD now preserves the community-popularity interval and academic-influence formula
+    - but it no longer defines the trigger logic for the other core signals or the enrichment-scope compromise in a self-contained way
+  - The full-snapshot design still encodes missing editorial content as placeholder prose in summary fields:
+    - candidate rows are required in `paper_summary`
+    - but their narrative fields are populated with placeholder text rather than being modeled as absent/non-applicable content
+    - this weakens downstream semantic clarity between true summaries and non-selected records
+  - The API section is still more of an endpoint inventory than an executable contract:
+    - it lists routes and a few params
+    - but it still omits concrete response schemas, pagination envelope details, detail-route payload shape, and RSS item/feed structure
+
+## Latest PRD-Only Review (2026-03-24, v2.6)
+- Re-reviewed `Detailed_PRD.md` v2.6 strictly as a PRD/design artifact.
+- The prior issues around taxonomy precedence, candidate NULL modeling, signal trigger restoration, and delivery-schema description have been materially improved.
+- Remaining design findings:
+  - The admission logic still leaves Focus/Watching overlap unresolved:
+    - `Focus 池` is defined as `score >= 80`
+    - `Watching 池` is defined as `score >= 50`
+    - without an explicit exclusion rule, every Focus paper also belongs to Watching
+    - this makes capacity slicing and post-review count semantics ambiguous
+  - The database chapter has regressed from a full schema back to a partial schema:
+    - section 2 still depends on both `paper` static metadata and task-level idempotency
+    - but section 5 now only specifies `paper_summary` and `subscriber`
+    - the PRD no longer independently defines the `paper` table or the task-log model needed for full reconstruction
+  - The API chapter has also regressed from a full contract to partial payload notes:
+    - it defines a generic JSON envelope, a detail payload field list, and RSS structure
+    - but it no longer specifies the endpoint inventory and request/response contracts for list, subscribe, verify, and unsubscribe flows
+  - Candidate snapshot nullability is still not fully propagated into the delivery contract:
+    - section 5 allows candidate narrative fields to be `NULL`
+    - but section 6's `PaperDetail` payload does not mark those fields as nullable or restrict detail retrieval to non-candidate records
+
+## Latest PRD-Only Review (2026-03-24, v2.7)
+- Re-reviewed `Detailed_PRD.md` v2.7 strictly as a PRD/design artifact.
+- v2.7 materially improves tier overlap, full-table enumeration, and candidate NULL semantics, but it also regresses on several previously stabilized architecture contracts.
+- Current design findings:
+  - The PRD no longer contains an executable AI pipeline contract:
+    - the document has dropped explicit Editor/Writer/Reviewer output shapes, parsing rules, retry rules, and rejection-handling protocol
+    - this leaves the core content-production workflow under-specified
+  - The PRD no longer defines batch/date semantics and task-level business rules in a first-class way:
+    - `issue_date` appears in schema/API
+    - but T+3 date ownership, fetch-date semantics, and task idempotency/rerun policy are no longer explicitly defined
+  - The current failure policy can cause avoidable issue failure because no replenishment rule exists:
+    - the PRD selects fixed-capacity top slices first
+    - then fails the issue if Reviewer removals drop surviving counts below thresholds
+    - but it does not specify whether remaining qualified candidates outside the initial slice should backfill before failure
+  - `direction` remains an under-specified enum despite being a stored and filterable field:
+    - the schema declares `direction` as an enum
+    - the API exposes `direction` filtering
+    - but the PRD no longer defines the canonical direction list or assignment policy
+
+## Latest PRD-Only Review (2026-03-24, v2.8)
+- Re-reviewed `Detailed_PRD.md` v2.8 strictly as a PRD/design artifact.
+- v2.8 materially restores the missing AI pipeline, T+3 scheduling semantics, backfill existence, and canonical direction enum list.
+- Remaining design findings:
+  - The backfill workflow is still not executable end-to-end:
+    - section 1.2 says replenishment selects the next paper and reruns `Writer -> Reviewer`
+    - but section 4 still makes `Editor` the stage that produces the paper selection brief/angle for chosen items
+    - the PRD does not define how a backfilled paper obtains its missing Editor-stage brief before Writer runs
+  - The product-level distinction between Focus and Watching output depth is still not contractually represented:
+    - section 1.2 says Focus gets "深度总结" while Watching gets "简要总结"
+    - but section 4.2 gives both categories the exact same writer structure
+    - the schema/API likewise expose one common summary shape, so the promised tier difference is not enforceable
+  - The direction taxonomy is still not reproducible from the PRD alone:
+    - section 3.3 defines enum order and says regex/keyword matching is used
+    - but it does not publish the actual per-direction regexes/keyword sets
+  - The API contract remains incomplete for list/mutation responses:
+    - it defines a generic envelope and a detail-route nullability note
+    - but still omits the concrete list-item schema, pagination fields, and success/error response bodies for subscribe/unsubscribe flows
+
+## Latest PRD-Only Review (2026-03-24, v2.9)
+- Re-reviewed `Detailed_PRD.md` v2.9 strictly as a PRD/design artifact.
+- v2.9 materially improves backfill continuity, product-tier differentiation, taxonomy reproducibility, and API response examples.
+- Remaining design findings:
+  - The Reviewer contract is still not fully executable:
+    - section 4.3 requires both overall decision and a rejected-ID list
+    - but it only publishes the regex for extracting the overall decision
+    - the rejected-list extraction/validation rule is still missing from the PRD
+  - The Editor brief remains under-specified despite being a first-class pipeline artifact:
+    - section 4.1 says Editor generates a dedicated editorial brief
+    - but the output contract only requires `## 论文: [arxiv_id]`
+    - required brief fields beyond the selected ID are still not formally defined
+  - The "full physical schema" claim is still overstated:
+    - many columns are listed without concrete SQL types/lengths/nullability details
+    - this is especially true for `paper` text/url columns, `paper_summary` narrative fields, `subscriber` token/email columns, and `system_task_log` counters
+  - The unified JSON envelope is still internally inconsistent:
+    - success responses are documented as `{code,msg,data}`
+    - the documented error response omits `data`
+
+## Latest PRD-Only Review (2026-03-24, v2.10)
+- Re-reviewed `Detailed_PRD.md` v2.10 strictly as a PRD/design artifact.
+- v2.10 materially improves the Editor brief contract, Reviewer rejected-list regex, physical-schema detail, and JSON envelope consistency.
+- Remaining design findings:
+  - The Reviewer PASS-case contract is still ambiguous:
+    - the output example says the rejected list is bracketed for IDs
+    - but says "无则填 '无'"
+    - the published regex only matches bracketed content
+    - the PRD still does not explicitly say whether the PASS form is `无` or `[无]`
+  - Selection authority is still split between the ranking layer and the Editor stage:
+    - section 1.2 says the system takes Top 5 / Top 12 by score for summarization
+    - section 4.1 still says Editor is responsible for selecting papers
+    - the PRD does not make it explicit whether Editor is selecting or only briefing preselected papers
+  - The Focus/Watching differentiation is now stated but not fully executable:
+    - section 4.2 imposes different highlight-count and scenario-length rules
+    - but the published extraction/validation rule still only checks that the six content blocks are non-empty
+  - The "physical schema" remains partially compressed:
+    - `one_line_summary(_en)`, `core_highlights(_en)`, and `application_scenarios(_en)` are still shorthand rather than explicit per-column rows
+    - `category`/`direction` still mix `VARCHAR` types with `ENUM(...)` constraint wording in a way that is not fully DDL-grade
+
+## Latest PRD-Only Review (2026-03-24, v2.11)
+- Re-reviewed `Detailed_PRD.md` v2.11 strictly as a PRD/design artifact.
+- v2.11 materially fixes the last major authority/parse ambiguities:
+  - Scorer now owns paper selection explicitly
+  - Reviewer PASS state is now `[]`
+  - Writer tier auditing is now elevated from prompt guidance to backend-enforced contract
+  - JSON envelope shape is now internally consistent
+- Remaining design findings:
+  - Bilingual alignment is still not fully contractualized:
+    - the product promise is "双语对齐"
+    - but the hard audit only constrains the Chinese `核心亮点` item count
+    - there is still no parity rule ensuring `core_highlights` and `core_highlights_en` have the same cardinality or aligned structure
+  - The lifecycle of `candidate` snapshots is still under-defined:
+    - `paper_summary` and the list API treat `candidate` as a first-class category
+    - but the PRD still does not explicitly define which papers become candidate rows
+    - it is still unclear whether this includes only threshold-qualified-but-not-selected papers, reviewer-rejected papers, or every fetched paper outside the published set
+  - The title field model remains semantically ambiguous:
+    - `paper.title` is defined as "中文/原始标题"
+    - `paper.title_en` is defined as "英文标题"
+    - this leaves canonical ownership unclear when the source title is already English and weakens the bilingual-data contract for API consumers
+
+## Latest Meta Assessment (2026-03-24)
+- User asked whether the PRD review cycle shows real progress or just churn.
+- Assessment:
+  - There has been clear, material progress overall; this is not simple circular churn.
+  - The trajectory is best described as "iterative hardening with occasional regression," not straight-line improvement.
+  - Evidence:
+    - early rounds had repeated P0/P1 structural defects in AI contracts, task idempotency, API completeness, and schema completeness
+    - mid rounds sometimes regressed by over-compressing the PRD and dropping previously restored contracts
+    - later rounds reintroduced those contracts and progressively moved issues from execution-breaking ambiguity to semantic/edge-case precision
+    - by v2.11, no new P0-level break remained in the latest PRD-only review
+
+## Latest PRD-Only Review (2026-03-24, v2.12)
+- Re-reviewed `Detailed_PRD.md` v2.12 strictly as a PRD/design artifact.
+- v2.12 does fix the three specific semantic issues called out in v2.11:
+  - bilingual highlight-count symmetry is now explicit
+  - candidate lifecycle is now much more explicitly defined
+  - title fields are now semantically cleaner (`title_zh`, `title_original`)
+- However, the document also regresses sharply by compressing previously restored executable contracts.
+- Current design findings:
+  - The AI pipeline contract has fallen back from executable to descriptive:
+    - Editor no longer publishes a concrete per-paper output shape with an ID anchor
+    - Writer no longer publishes the exact markdown block structure in a parser-grade form
+    - Reviewer no longer publishes regex/strict parsing/failure semantics
+  - The scoring and taxonomy chapters are no longer reproducible:
+    - section 3.1 collapses eight signals into a one-line summary without trigger rules
+    - section 3.2 collapses taxonomy into enum names only, dropping the keyword/priority assignment logic
+  - The "physical schema" is no longer full-fidelity:
+    - `subscriber` and `system_task_log` are absent
+    - `paper_summary` narrative fields are compressed into "8-13"
+    - this is no longer enough for independent physical reconstruction
+  - The API contract has regressed from executable to inventory-level:
+    - endpoints are listed
+    - but request parameters, pagination fields, response payload structures, and mutation success/error bodies are no longer fully specified
+
+## Latest PRD-Only Review (2026-03-24, v2.14)
+- Re-reviewed `Detailed_PRD.md` v2.14 strictly as a PRD/design artifact.
+- v2.14 materially restores the execution-grade detail that v2.12 had compressed away:
+  - full AI-stage markdown templates are back
+  - scoring/taxonomy rules are expanded again
+  - `subscriber`/`system_task_log` and detailed API payloads are restored
+  - the bilingual symmetry, candidate lifecycle, and `title_zh`/`title_original` semantic fixes are retained
+- Remaining design findings:
+  - The Writer contract is still not fully parser-grade:
+    - section 4.2 defines the markdown shape and downstream audit rules
+    - but it still does not publish the actual extraction rule/regex for the six text blocks
+    - the PRD therefore assumes parsed fields without fully defining how they are deterministically extracted
+  - The Editor contract is only partially validated:
+    - section 4.1 publishes a regex for the per-paper ID anchor
+    - but it does not define extraction/validation rules for `写作角度`, `核心痛点`, and `具体解法`
+    - this leaves the most important brief content under-specified as a machine contract
+  - Candidate state transition is still ambiguous under backfill:
+    - section 1.2 says overflow papers are archived as `candidate`
+    - the same overflow pool is later used for replenishment into Focus/Watching
+    - the PRD does not explicitly define whether such papers are promoted by mutating `category`, duplicated elsewhere, or treated as candidate plus published simultaneously
+  - The "100% DDL-grade" claim is still slightly overstated:
+    - `category` and `direction` are typed as `VARCHAR(...)` while also marked `ENUM`
+    - the PRD still does not state the exact physical mechanism (native ENUM vs CHECK constraint), so the schema is close to but not fully database-specific DDL
+
+## Latest PRD-Only Review (2026-03-24, v2.15)
+- Re-reviewed `Detailed_PRD.md` v2.15 strictly as a PRD/design artifact.
+- v2.15 materially improves the parser-grade ambition:
+  - Editor and Writer now publish explicit extraction regexes
+  - backfill now defines an atomic `UPDATE`-based promotion path
+  - the schema now commits to MySQL 8.0+ and native ENUM-style physical typing
+- Remaining design findings:
+  - The Writer parsing contract is self-contradictory:
+    - the markdown template shows `- **核心亮点**:` immediately followed by a newline
+    - but the published regex requires `: \n` (a literal space before newline)
+    - the same contradiction exists for `Core Highlights`
+  - Retry/failure semantics are no longer closed:
+    - Editor and Writer say validation failure triggers retry
+    - but the PRD no longer defines retry ceilings or terminal failure rules for those stages
+    - Reviewer now has parse rules only, without the previously explicit retry/FAILED semantics
+  - Candidate lifecycle still lacks the reverse state-transition rule:
+    - the PRD now explicitly defines `candidate -> focus/watching` as an atomic update during backfill
+    - but it still does not explicitly define how a previously written focus/watching row becomes `candidate` with narrative fields nulled after Reviewer rejection
+  - The API chapter regresses from fully executable to partially executable:
+    - list/detail endpoints are named
+    - but query parameters, full detail payload shape, and error response contracts are no longer completely spelled out
+
+## Latest PRD-Only Review (2026-03-24, v2.16)
+- Re-reviewed `Detailed_PRD.md` v2.16 strictly as a PRD/design artifact.
+- v2.16 does close the specific defects called out in v2.15:
+  - the Writer colon/newline regex mismatch is fixed
+  - retry ceilings and FAILED semantics are now explicit again
+  - reverse state transition to `candidate` with narrative NULL reset is now documented
+- However, the document regresses again by compressing previously restored executable detail.
+- Current design findings:
+  - The taxonomy chapter is no longer reproducible:
+    - section 3.2 now gives only the enum order and names
+    - it drops the per-direction keyword sets needed to independently classify papers
+  - The AI contract is no longer fully explicit:
+    - Editor and Writer no longer publish the concrete markdown output templates
+    - Reviewer no longer publishes its extraction regexes
+    - the PRD keeps parser fragments but loses the full end-to-end I/O contract
+  - The database chapter is no longer full-fidelity:
+    - `direction` is compressed to `ENUM(15项Taxonomy)`
+    - `paper_summary` narrative columns are grouped into ranges
+    - `subscriber` and `system_task_log` are collapsed into one-line summaries rather than full per-column definitions
+  - The API chapter is no longer complete:
+    - `/subscribe/verify` and `/rss` are missing
+    - list/detail payloads are abbreviated again
+
+## Latest PRD-Only Review (2026-03-24, v2.17)
+- Re-reviewed `Detailed_PRD.md` v2.17 strictly as a PRD/design artifact.
+- v2.17 materially restores most of the execution-grade detail that v2.16 had compressed:
+  - taxonomy keyword sets are back
+  - full AI markdown templates, parser regexes, and retry/FAILED semantics are back
+  - full table definitions and full API inventory are back
+- Remaining design findings:
+  - The backfill pool still lacks an explicit exclusion rule for already rejected papers:
+    - section 1.2 says Reviewer-rejected papers are migrated back to `candidate`
+    - the same section says replenishment selects the next paper from the corresponding candidate pool by score order
+    - the PRD still does not explicitly state that rejected papers are permanently ineligible for later backfill in the same issue
+  - The AI parser contract still assumes an undefined "block" segmentation step:
+    - Editor and Writer publish field-level regexes against `block`
+    - but the PRD does not define the exact parser rule used to split a multi-paper output into per-paper blocks before those regexes run
+  - The API contract for verification remains slightly incomplete:
+    - `/api/v1/subscribe/verify` specifies the redirect behavior
+    - but does not formally specify the required `token` query parameter
+
+## Latest PRD-Only Review (2026-03-24, v2.18)
+- Re-reviewed `Detailed_PRD.md` v2.18 strictly as a PRD/design artifact.
+- v2.18 closes the three specific defects called out in v2.17:
+  - rejected papers are now explicitly blacklisted from same-issue backfill
+  - block splitting is now formally introduced
+  - `/api/v1/subscribe/verify` now declares its required `token` parameter
+- No new P0-grade execution break was found in this pass.
+- Remaining design findings:
+  - The block-splitting contract is still not fully deterministic:
+    - both Editor and Writer define `re.split(...)` with a capturing group
+    - but the PRD does not define how the resulting alternating array (`prefix`, `id`, `body`, ...) is recomposed into per-paper records before field regexes run
+  - Candidate provenance is still not representable in the data model:
+    - section 1.2 defines three distinct reasons a paper can become `candidate`
+    - but `paper_summary.category` stores only a single `candidate` value with no reason/provenance field
+    - this weakens the claimed source transparency of the archive layer
+  - The "top institution" signal is still not independently reproducible:
+    - section 3.1 references an internal "40+ institution list"
+    - but the actual whitelist is not enumerated in the PRD, so separate implementations could diverge

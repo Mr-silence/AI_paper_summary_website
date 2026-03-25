@@ -784,3 +784,13 @@ When continuing work in this repository, read this file first.
   - 使用 `git push --force` 强制推送到远程覆盖了包含 API key 的提交
 - 新提交: `d3f8ca4` (`chore: 添加项目级 .gitignore 排除敏感文件`)
 - 注意: GitHub 上已不存在 bf82628 提交，API key 不再泄露
+
+## Latest Git Action (2026-03-25, 全量提交)
+- User requested 将所有本地更改推送到 GitHub（除 API key 外）
+- 提交内容:
+  - 测试框架: pytest + vitest 配置与测试用例
+  - 本地开发脚本: setup_local_db.py, setup_local_mysql.py, check_kimi_api.py, run_pipeline_once.py
+  - 项目文档: tests/README.md, issue_2026-02-14_ai_results.md
+  - 其他: .nexus-map/ 目录、requirements.txt、frontend/test-utils.js 等
+- 新提交: `deca6b2` (`功能：新增测试框架、本地开发脚本与项目文档`)
+- 注意: .gitignore 已排除 .env 文件，API key 不会泄露

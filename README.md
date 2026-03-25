@@ -4,8 +4,6 @@
 
 本项目围绕“抓取真实论文源 -> 评分排序 -> AI 生成双语解读 -> 快照落库 -> Web / RSS / 订阅分发”这条主链构建，目标不是做一个简单的论文聚合站，而是做一个对技术从业者更友好的每日 AI 论文 briefing 产品。
 
-## 项目标题图
-
 <p align="center">
   <img src="./image/Title%20Image.png" alt="AI Paper Summary 标题图" width="100%" />
 </p>

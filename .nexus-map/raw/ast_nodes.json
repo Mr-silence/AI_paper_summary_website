@@ -1,0 +1,3276 @@
+{
+  "languages": [
+    "javascript",
+    "python",
+    "sql",
+    "vue"
+  ],
+  "stats": {
+    "total_files": 63,
+    "total_lines": 4891,
+    "parse_errors": 0,
+    "truncated": false,
+    "truncated_nodes": 0,
+    "supported_file_counts": {
+      "sql": 2,
+      "javascript": 14,
+      "python": 40,
+      "vue": 7
+    },
+    "languages_with_structural_queries": [
+      "c",
+      "cpp",
+      "csharp",
+      "elixir",
+      "gdscript",
+      "go",
+      "java",
+      "javascript",
+      "kotlin",
+      "lua",
+      "php",
+      "python",
+      "ruby",
+      "rust",
+      "scala",
+      "swift",
+      "tsx",
+      "typescript"
+    ],
+    "languages_with_custom_queries": [],
+    "module_only_file_counts": {
+      "sql": 2,
+      "vue": 7
+    },
+    "known_unsupported_file_counts": {},
+    "configured_but_unavailable_file_counts": {},
+    "custom_language_config_paths": []
+  },
+  "nodes": [
+    {
+      "id": "backend.app",
+      "type": "Module",
+      "label": "app",
+      "path": "backend/app/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.api",
+      "type": "Module",
+      "label": "api",
+      "path": "backend/app/api/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.api.v1",
+      "type": "Module",
+      "label": "v1",
+      "path": "backend/app/api/v1/__init__.py",
+      "lines": 9,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.api.v1.papers",
+      "type": "Module",
+      "label": "papers",
+      "path": "backend/app/api/v1/papers.py",
+      "lines": 127,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.api.v1.papers._normalize_authors",
+      "type": "Function",
+      "label": "_normalize_authors",
+      "path": "backend/app/api/v1/papers.py",
+      "parent": "backend.app.api.v1.papers",
+      "start_line": 21,
+      "end_line": 33
+    },
+    {
+      "id": "backend.app.api.v1.papers._serialize_list_item",
+      "type": "Function",
+      "label": "_serialize_list_item",
+      "path": "backend/app/api/v1/papers.py",
+      "parent": "backend.app.api.v1.papers",
+      "start_line": 36,
+      "end_line": 50
+    },
+    {
+      "id": "backend.app.api.v1.papers.get_papers",
+      "type": "Function",
+      "label": "get_papers",
+      "path": "backend/app/api/v1/papers.py",
+      "parent": "backend.app.api.v1.papers",
+      "start_line": 54,
+      "end_line": 94
+    },
+    {
+      "id": "backend.app.api.v1.papers.get_paper_detail",
+      "type": "Function",
+      "label": "get_paper_detail",
+      "path": "backend/app/api/v1/papers.py",
+      "parent": "backend.app.api.v1.papers",
+      "start_line": 98,
+      "end_line": 126
+    },
+    {
+      "id": "backend.app.api.v1.rss",
+      "type": "Module",
+      "label": "rss",
+      "path": "backend/app/api/v1/rss.py",
+      "lines": 48,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.api.v1.rss.get_rss",
+      "type": "Function",
+      "label": "get_rss",
+      "path": "backend/app/api/v1/rss.py",
+      "parent": "backend.app.api.v1.rss",
+      "start_line": 15,
+      "end_line": 47
+    },
+    {
+      "id": "backend.app.api.v1.subscribe",
+      "type": "Module",
+      "label": "subscribe",
+      "path": "backend/app/api/v1/subscribe.py",
+      "lines": 145,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.check_rate_limit",
+      "type": "Function",
+      "label": "check_rate_limit",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 22,
+      "end_line": 31
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.enforce_write_rate_limit",
+      "type": "Function",
+      "label": "enforce_write_rate_limit",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 34,
+      "end_line": 37
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.mock_send_email",
+      "type": "Function",
+      "label": "mock_send_email",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 40,
+      "end_line": 45
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.build_unsubscribe_link",
+      "type": "Function",
+      "label": "build_unsubscribe_link",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 48,
+      "end_line": 50
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.subscribe",
+      "type": "Function",
+      "label": "subscribe",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 54,
+      "end_line": 105
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.verify_subscription",
+      "type": "Function",
+      "label": "verify_subscription",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 109,
+      "end_line": 125
+    },
+    {
+      "id": "backend.app.api.v1.subscribe.unsubscribe",
+      "type": "Function",
+      "label": "unsubscribe",
+      "path": "backend/app/api/v1/subscribe.py",
+      "parent": "backend.app.api.v1.subscribe",
+      "start_line": 129,
+      "end_line": 144
+    },
+    {
+      "id": "backend.app.core",
+      "type": "Module",
+      "label": "core",
+      "path": "backend/app/core/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.core.config",
+      "type": "Module",
+      "label": "config",
+      "path": "backend/app/core/config.py",
+      "lines": 13,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.core.config.Settings",
+      "type": "Class",
+      "label": "Settings",
+      "path": "backend/app/core/config.py",
+      "parent": "backend.app.core.config",
+      "start_line": 3,
+      "end_line": 11
+    },
+    {
+      "id": "backend.app.core.config.Config",
+      "type": "Class",
+      "label": "Config",
+      "path": "backend/app/core/config.py",
+      "parent": "backend.app.core.config",
+      "start_line": 10,
+      "end_line": 11
+    },
+    {
+      "id": "backend.app.core.specs",
+      "type": "Module",
+      "label": "specs",
+      "path": "backend/app/core/specs.py",
+      "lines": 110,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.core.specs.build_literal_boundary_pattern",
+      "type": "Function",
+      "label": "build_literal_boundary_pattern",
+      "path": "backend/app/core/specs.py",
+      "parent": "backend.app.core.specs",
+      "start_line": 107,
+      "end_line": 109
+    },
+    {
+      "id": "backend.app.crud",
+      "type": "Module",
+      "label": "crud",
+      "path": "backend/app/crud/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.db",
+      "type": "Module",
+      "label": "db",
+      "path": "backend/app/db/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.db.session",
+      "type": "Module",
+      "label": "session",
+      "path": "backend/app/db/session.py",
+      "lines": 20,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.db.session.get_db",
+      "type": "Function",
+      "label": "get_db",
+      "path": "backend/app/db/session.py",
+      "parent": "backend.app.db.session",
+      "start_line": 14,
+      "end_line": 19
+    },
+    {
+      "id": "backend.app.main",
+      "type": "Module",
+      "label": "main",
+      "path": "backend/app/main.py",
+      "lines": 58,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.main.http_exception_handler",
+      "type": "Function",
+      "label": "http_exception_handler",
+      "path": "backend/app/main.py",
+      "parent": "backend.app.main",
+      "start_line": 20,
+      "end_line": 28
+    },
+    {
+      "id": "backend.app.main.validation_exception_handler",
+      "type": "Function",
+      "label": "validation_exception_handler",
+      "path": "backend/app/main.py",
+      "parent": "backend.app.main",
+      "start_line": 31,
+      "end_line": 39
+    },
+    {
+      "id": "backend.app.main.generic_exception_handler",
+      "type": "Function",
+      "label": "generic_exception_handler",
+      "path": "backend/app/main.py",
+      "parent": "backend.app.main",
+      "start_line": 42,
+      "end_line": 50
+    },
+    {
+      "id": "backend.app.main.read_root",
+      "type": "Function",
+      "label": "read_root",
+      "path": "backend/app/main.py",
+      "parent": "backend.app.main",
+      "start_line": 56,
+      "end_line": 57
+    },
+    {
+      "id": "backend.app.models",
+      "type": "Module",
+      "label": "models",
+      "path": "backend/app/models/__init__.py",
+      "lines": 2,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.models.base",
+      "type": "Module",
+      "label": "base",
+      "path": "backend/app/models/base.py",
+      "lines": 3,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.models.domain",
+      "type": "Module",
+      "label": "domain",
+      "path": "backend/app/models/domain.py",
+      "lines": 81,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.models.domain.Paper",
+      "type": "Class",
+      "label": "Paper",
+      "path": "backend/app/models/domain.py",
+      "parent": "backend.app.models.domain",
+      "start_line": 9,
+      "end_line": 24
+    },
+    {
+      "id": "backend.app.models.domain.PaperSummary",
+      "type": "Class",
+      "label": "PaperSummary",
+      "path": "backend/app/models/domain.py",
+      "parent": "backend.app.models.domain",
+      "start_line": 27,
+      "end_line": 53
+    },
+    {
+      "id": "backend.app.models.domain.Subscriber",
+      "type": "Class",
+      "label": "Subscriber",
+      "path": "backend/app/models/domain.py",
+      "parent": "backend.app.models.domain",
+      "start_line": 56,
+      "end_line": 67
+    },
+    {
+      "id": "backend.app.models.domain.SystemTaskLog",
+      "type": "Class",
+      "label": "SystemTaskLog",
+      "path": "backend/app/models/domain.py",
+      "parent": "backend.app.models.domain",
+      "start_line": 70,
+      "end_line": 80
+    },
+    {
+      "id": "backend.app.schemas",
+      "type": "Module",
+      "label": "schemas",
+      "path": "backend/app/schemas/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.schemas.paper",
+      "type": "Module",
+      "label": "paper",
+      "path": "backend/app/schemas/paper.py",
+      "lines": 65,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.schemas.paper.ResponseModel",
+      "type": "Class",
+      "label": "ResponseModel",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 7,
+      "end_line": 10
+    },
+    {
+      "id": "backend.app.schemas.paper.AuthorModel",
+      "type": "Class",
+      "label": "AuthorModel",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 13,
+      "end_line": 15
+    },
+    {
+      "id": "backend.app.schemas.paper.PaperListItem",
+      "type": "Class",
+      "label": "PaperListItem",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 18,
+      "end_line": 30
+    },
+    {
+      "id": "backend.app.schemas.paper.PaperListPayload",
+      "type": "Class",
+      "label": "PaperListPayload",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 33,
+      "end_line": 35
+    },
+    {
+      "id": "backend.app.schemas.paper.PaperListResponseModel",
+      "type": "Class",
+      "label": "PaperListResponseModel",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 38,
+      "end_line": 39
+    },
+    {
+      "id": "backend.app.schemas.paper.PaperDetail",
+      "type": "Class",
+      "label": "PaperDetail",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 42,
+      "end_line": 52
+    },
+    {
+      "id": "backend.app.schemas.paper.PaperDetailResponseModel",
+      "type": "Class",
+      "label": "PaperDetailResponseModel",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 55,
+      "end_line": 56
+    },
+    {
+      "id": "backend.app.schemas.paper.SubscribeRequest",
+      "type": "Class",
+      "label": "SubscribeRequest",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 59,
+      "end_line": 60
+    },
+    {
+      "id": "backend.app.schemas.paper.UnsubscribeRequest",
+      "type": "Class",
+      "label": "UnsubscribeRequest",
+      "path": "backend/app/schemas/paper.py",
+      "parent": "backend.app.schemas.paper",
+      "start_line": 63,
+      "end_line": 64
+    },
+    {
+      "id": "backend.app.services",
+      "type": "Module",
+      "label": "services",
+      "path": "backend/app/services/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.services.ai_processor",
+      "type": "Module",
+      "label": "ai_processor",
+      "path": "backend/app/services/ai_processor.py",
+      "lines": 325,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor",
+      "type": "Class",
+      "label": "AIProcessor",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor",
+      "start_line": 11,
+      "end_line": 324
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor.__init__",
+      "type": "Function",
+      "label": "__init__",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 19,
+      "end_line": 31
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor._call_llm",
+      "type": "Function",
+      "label": "_call_llm",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 33,
+      "end_line": 58
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor.run_editor",
+      "type": "Function",
+      "label": "run_editor",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 60,
+      "end_line": 87
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor.localize_titles",
+      "type": "Function",
+      "label": "localize_titles",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 89,
+      "end_line": 131
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor.run_writer",
+      "type": "Function",
+      "label": "run_writer",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 133,
+      "end_line": 164
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor.run_reviewer",
+      "type": "Function",
+      "label": "run_reviewer",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 166,
+      "end_line": 190
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor.parse_final_summaries",
+      "type": "Function",
+      "label": "parse_final_summaries",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 192,
+      "end_line": 255
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor._split_markdown_blocks",
+      "type": "Function",
+      "label": "_split_markdown_blocks",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 258,
+      "end_line": 267
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor._validate_exact_id_set",
+      "type": "Function",
+      "label": "_validate_exact_id_set",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 270,
+      "end_line": 285
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor._extract_markdown_bullets",
+      "type": "Function",
+      "label": "_extract_markdown_bullets",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 288,
+      "end_line": 289
+    },
+    {
+      "id": "backend.app.services.ai_processor.AIProcessor._parse_title_localization_output",
+      "type": "Function",
+      "label": "_parse_title_localization_output",
+      "path": "backend/app/services/ai_processor.py",
+      "parent": "backend.app.services.ai_processor.AIProcessor",
+      "start_line": 292,
+      "end_line": 324
+    },
+    {
+      "id": "backend.app.services.crawler",
+      "type": "Module",
+      "label": "crawler",
+      "path": "backend/app/services/crawler.py",
+      "lines": 218,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler",
+      "type": "Class",
+      "label": "Crawler",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler",
+      "start_line": 11,
+      "end_line": 217
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler.__init__",
+      "type": "Function",
+      "label": "__init__",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 22,
+      "end_line": 23
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler.fetch_papers",
+      "type": "Function",
+      "label": "fetch_papers",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 25,
+      "end_line": 43
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler.enrich_metadata",
+      "type": "Function",
+      "label": "enrich_metadata",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 45,
+      "end_line": 54
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._fetch_citation_count",
+      "type": "Function",
+      "label": "_fetch_citation_count",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 56,
+      "end_line": 66
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._fetch_github_trending",
+      "type": "Function",
+      "label": "_fetch_github_trending",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 68,
+      "end_line": 86
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._fetch_hf_papers",
+      "type": "Function",
+      "label": "_fetch_hf_papers",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 88,
+      "end_line": 94
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._fetch_arxiv_papers",
+      "type": "Function",
+      "label": "_fetch_arxiv_papers",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 96,
+      "end_line": 112
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._parse_arxiv_xml",
+      "type": "Function",
+      "label": "_parse_arxiv_xml",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 114,
+      "end_line": 160
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._normalize_hf_data",
+      "type": "Function",
+      "label": "_normalize_hf_data",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 162,
+      "end_line": 201
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._extract_github_repos",
+      "type": "Function",
+      "label": "_extract_github_repos",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 203,
+      "end_line": 213
+    },
+    {
+      "id": "backend.app.services.crawler.Crawler._normalize_text",
+      "type": "Function",
+      "label": "_normalize_text",
+      "path": "backend/app/services/crawler.py",
+      "parent": "backend.app.services.crawler.Crawler",
+      "start_line": 216,
+      "end_line": 217
+    },
+    {
+      "id": "backend.app.services.filter",
+      "type": "Module",
+      "label": "filter",
+      "path": "backend/app/services/filter.py",
+      "lines": 36,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.services.filter.Filter",
+      "type": "Class",
+      "label": "Filter",
+      "path": "backend/app/services/filter.py",
+      "parent": "backend.app.services.filter",
+      "start_line": 3,
+      "end_line": 23
+    },
+    {
+      "id": "backend.app.services.filter.Filter.__init__",
+      "type": "Function",
+      "label": "__init__",
+      "path": "backend/app/services/filter.py",
+      "parent": "backend.app.services.filter.Filter",
+      "start_line": 7,
+      "end_line": 8
+    },
+    {
+      "id": "backend.app.services.filter.Filter.process",
+      "type": "Function",
+      "label": "process",
+      "path": "backend/app/services/filter.py",
+      "parent": "backend.app.services.filter.Filter",
+      "start_line": 10,
+      "end_line": 23
+    },
+    {
+      "id": "backend.app.services.pipeline",
+      "type": "Module",
+      "label": "pipeline",
+      "path": "backend/app/services/pipeline.py",
+      "lines": 364,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline",
+      "type": "Class",
+      "label": "Pipeline",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline",
+      "start_line": 22,
+      "end_line": 355
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline.__init__",
+      "type": "Function",
+      "label": "__init__",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 28,
+      "end_line": 32
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline.run",
+      "type": "Function",
+      "label": "run",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 34,
+      "end_line": 113
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._start_task",
+      "type": "Function",
+      "label": "_start_task",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 115,
+      "end_line": 129
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._upsert_papers",
+      "type": "Function",
+      "label": "_upsert_papers",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 131,
+      "end_line": 156
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._reset_issue_snapshots",
+      "type": "Function",
+      "label": "_reset_issue_snapshots",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 158,
+      "end_line": 160
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._seed_summary_snapshots",
+      "type": "Function",
+      "label": "_seed_summary_snapshots",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 162,
+      "end_line": 196
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._process_category_batch",
+      "type": "Function",
+      "label": "_process_category_batch",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 198,
+      "end_line": 251
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._run_ai_batch",
+      "type": "Function",
+      "label": "_run_ai_batch",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 253,
+      "end_line": 317
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._promote_summary",
+      "type": "Function",
+      "label": "_promote_summary",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 320,
+      "end_line": 322
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._demote_summary",
+      "type": "Function",
+      "label": "_demote_summary",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 325,
+      "end_line": 333
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._apply_narrative",
+      "type": "Function",
+      "label": "_apply_narrative",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 336,
+      "end_line": 343
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._resolve_issue_date",
+      "type": "Function",
+      "label": "_resolve_issue_date",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 346,
+      "end_line": 349
+    },
+    {
+      "id": "backend.app.services.pipeline.Pipeline._ensure_date",
+      "type": "Function",
+      "label": "_ensure_date",
+      "path": "backend/app/services/pipeline.py",
+      "parent": "backend.app.services.pipeline.Pipeline",
+      "start_line": 352,
+      "end_line": 355
+    },
+    {
+      "id": "backend.app.services.scorer",
+      "type": "Module",
+      "label": "scorer",
+      "path": "backend/app/services/scorer.py",
+      "lines": 146,
+      "lang": "python"
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer",
+      "type": "Class",
+      "label": "Scorer",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer",
+      "start_line": 14,
+      "end_line": 126
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer.score_paper",
+      "type": "Function",
+      "label": "score_paper",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 32,
+      "end_line": 81
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._matches_top_institution",
+      "type": "Function",
+      "label": "_matches_top_institution",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 83,
+      "end_line": 87
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._matches_top_conference",
+      "type": "Function",
+      "label": "_matches_top_conference",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 89,
+      "end_line": 91
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._has_code_signal",
+      "type": "Function",
+      "label": "_has_code_signal",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 93,
+      "end_line": 95
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._matches_practitioner_keywords",
+      "type": "Function",
+      "label": "_matches_practitioner_keywords",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 97,
+      "end_line": 99
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._detect_direction",
+      "type": "Function",
+      "label": "_detect_direction",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 101,
+      "end_line": 106
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._determine_threshold_category",
+      "type": "Function",
+      "label": "_determine_threshold_category",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 109,
+      "end_line": 114
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._title_abstract_text",
+      "type": "Function",
+      "label": "_title_abstract_text",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 117,
+      "end_line": 118
+    },
+    {
+      "id": "backend.app.services.scorer.Scorer._iter_affiliations",
+      "type": "Function",
+      "label": "_iter_affiliations",
+      "path": "backend/app/services/scorer.py",
+      "parent": "backend.app.services.scorer.Scorer",
+      "start_line": 121,
+      "end_line": 126
+    },
+    {
+      "id": "backend.app.utils",
+      "type": "Module",
+      "label": "utils",
+      "path": "backend/app/utils/__init__.py",
+      "lines": 1,
+      "lang": "python"
+    },
+    {
+      "id": "backend.scripts.backfill_title_zh",
+      "type": "Module",
+      "label": "backfill_title_zh",
+      "path": "backend/scripts/backfill_title_zh.py",
+      "lines": 58,
+      "lang": "python"
+    },
+    {
+      "id": "backend.scripts.backfill_title_zh.main",
+      "type": "Function",
+      "label": "main",
+      "path": "backend/scripts/backfill_title_zh.py",
+      "parent": "backend.scripts.backfill_title_zh",
+      "start_line": 13,
+      "end_line": 53
+    },
+    {
+      "id": "database.migrate_v225",
+      "type": "Module",
+      "label": "migrate_v225",
+      "path": "database/migrate_v225.sql",
+      "lines": 186,
+      "lang": "sql"
+    },
+    {
+      "id": "database.schema",
+      "type": "Module",
+      "label": "schema",
+      "path": "database/schema.sql",
+      "lines": 95,
+      "lang": "sql"
+    },
+    {
+      "id": "frontend.src.App",
+      "type": "Module",
+      "label": "App",
+      "path": "frontend/src/App.vue",
+      "lines": 182,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.src.api.papers",
+      "type": "Module",
+      "label": "papers",
+      "path": "frontend/src/api/papers.js",
+      "lines": 59,
+      "lang": "javascript"
+    },
+    {
+      "id": "frontend.src.api.papers.getPapers",
+      "type": "Function",
+      "label": "getPapers",
+      "path": "frontend/src/api/papers.js",
+      "parent": "frontend.src.api.papers",
+      "start_line": 10,
+      "end_line": 16
+    },
+    {
+      "id": "frontend.src.api.papers.getPaperDetail",
+      "type": "Function",
+      "label": "getPaperDetail",
+      "path": "frontend/src/api/papers.js",
+      "parent": "frontend.src.api.papers",
+      "start_line": 23,
+      "end_line": 28
+    },
+    {
+      "id": "frontend.src.api.papers.subscribeEmail",
+      "type": "Function",
+      "label": "subscribeEmail",
+      "path": "frontend/src/api/papers.js",
+      "parent": "frontend.src.api.papers",
+      "start_line": 35,
+      "end_line": 43
+    },
+    {
+      "id": "frontend.src.api.papers.unsubscribeEmail",
+      "type": "Function",
+      "label": "unsubscribeEmail",
+      "path": "frontend/src/api/papers.js",
+      "parent": "frontend.src.api.papers",
+      "start_line": 50,
+      "end_line": 58
+    },
+    {
+      "id": "frontend.src.components.HelloWorld",
+      "type": "Module",
+      "label": "HelloWorld",
+      "path": "frontend/src/components/HelloWorld.vue",
+      "lines": 94,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.src.main",
+      "type": "Module",
+      "label": "main",
+      "path": "frontend/src/main.js",
+      "lines": 14,
+      "lang": "javascript"
+    },
+    {
+      "id": "frontend.src.router.index",
+      "type": "Module",
+      "label": "index",
+      "path": "frontend/src/router/index.js",
+      "lines": 40,
+      "lang": "javascript"
+    },
+    {
+      "id": "frontend.src.utils.request",
+      "type": "Module",
+      "label": "request",
+      "path": "frontend/src/utils/request.js",
+      "lines": 43,
+      "lang": "javascript"
+    },
+    {
+      "id": "frontend.src.views.Detail",
+      "type": "Module",
+      "label": "Detail",
+      "path": "frontend/src/views/Detail.vue",
+      "lines": 247,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.src.views.Home",
+      "type": "Module",
+      "label": "Home",
+      "path": "frontend/src/views/Home.vue",
+      "lines": 377,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.src.views.Sources",
+      "type": "Module",
+      "label": "Sources",
+      "path": "frontend/src/views/Sources.vue",
+      "lines": 182,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.src.views.Topic",
+      "type": "Module",
+      "label": "Topic",
+      "path": "frontend/src/views/Topic.vue",
+      "lines": 147,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.src.views.Unsubscribe",
+      "type": "Module",
+      "label": "Unsubscribe",
+      "path": "frontend/src/views/Unsubscribe.vue",
+      "lines": 91,
+      "lang": "vue"
+    },
+    {
+      "id": "frontend.test-utils",
+      "type": "Module",
+      "label": "test-utils",
+      "path": "frontend/test-utils.js",
+      "lines": 4,
+      "lang": "javascript"
+    },
+    {
+      "id": "frontend.vite.config",
+      "type": "Module",
+      "label": "config",
+      "path": "frontend/vite.config.js",
+      "lines": 8,
+      "lang": "javascript"
+    },
+    {
+      "id": "frontend.vitest.config",
+      "type": "Module",
+      "label": "config",
+      "path": "frontend/vitest.config.js",
+      "lines": 18,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests",
+      "type": "Module",
+      "label": "tests",
+      "path": "tests/__init__.py",
+      "lines": 2,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.conftest",
+      "type": "Module",
+      "label": "conftest",
+      "path": "tests/backend/conftest.py",
+      "lines": 246,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.conftest.clear_rate_limit_store",
+      "type": "Function",
+      "label": "clear_rate_limit_store",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 17,
+      "end_line": 20
+    },
+    {
+      "id": "tests.backend.conftest.db_engine",
+      "type": "Function",
+      "label": "db_engine",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 24,
+      "end_line": 35
+    },
+    {
+      "id": "tests.backend.conftest.session_factory",
+      "type": "Function",
+      "label": "session_factory",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 39,
+      "end_line": 40
+    },
+    {
+      "id": "tests.backend.conftest.db_session",
+      "type": "Function",
+      "label": "db_session",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 44,
+      "end_line": 49
+    },
+    {
+      "id": "tests.backend.conftest.api_client",
+      "type": "Function",
+      "label": "api_client",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 53,
+      "end_line": 66
+    },
+    {
+      "id": "tests.backend.conftest.override_get_db",
+      "type": "Function",
+      "label": "override_get_db",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 54,
+      "end_line": 59
+    },
+    {
+      "id": "tests.backend.conftest.sample_paper_payload",
+      "type": "Function",
+      "label": "sample_paper_payload",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 70,
+      "end_line": 87
+    },
+    {
+      "id": "tests.backend.conftest.seeded_papers",
+      "type": "Function",
+      "label": "seeded_papers",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 91,
+      "end_line": 232
+    },
+    {
+      "id": "tests.backend.conftest.active_subscriber_seed",
+      "type": "Function",
+      "label": "active_subscriber_seed",
+      "path": "tests/backend/conftest.py",
+      "parent": "tests.backend.conftest",
+      "start_line": 236,
+      "end_line": 245
+    },
+    {
+      "id": "tests.backend.integration.test_papers_api",
+      "type": "Module",
+      "label": "test_papers_api",
+      "path": "tests/backend/integration/test_papers_api.py",
+      "lines": 55,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.integration.test_papers_api.test_get_papers_excludes_candidates_by_default",
+      "type": "Function",
+      "label": "test_get_papers_excludes_candidates_by_default",
+      "path": "tests/backend/integration/test_papers_api.py",
+      "parent": "tests.backend.integration.test_papers_api",
+      "start_line": 7,
+      "end_line": 16
+    },
+    {
+      "id": "tests.backend.integration.test_papers_api.test_get_papers_include_candidates_preserves_null_narratives",
+      "type": "Function",
+      "label": "test_get_papers_include_candidates_preserves_null_narratives",
+      "path": "tests/backend/integration/test_papers_api.py",
+      "parent": "tests.backend.integration.test_papers_api",
+      "start_line": 19,
+      "end_line": 35
+    },
+    {
+      "id": "tests.backend.integration.test_papers_api.test_get_paper_detail_returns_latest_summary_and_candidate_null_fields",
+      "type": "Function",
+      "label": "test_get_paper_detail_returns_latest_summary_and_candidate_null_fields",
+      "path": "tests/backend/integration/test_papers_api.py",
+      "parent": "tests.backend.integration.test_papers_api",
+      "start_line": 38,
+      "end_line": 47
+    },
+    {
+      "id": "tests.backend.integration.test_papers_api.test_get_paper_detail_returns_404_for_missing_paper",
+      "type": "Function",
+      "label": "test_get_paper_detail_returns_404_for_missing_paper",
+      "path": "tests/backend/integration/test_papers_api.py",
+      "parent": "tests.backend.integration.test_papers_api",
+      "start_line": 50,
+      "end_line": 54
+    },
+    {
+      "id": "tests.backend.integration.test_subscribe_api",
+      "type": "Module",
+      "label": "test_subscribe_api",
+      "path": "tests/backend/integration/test_subscribe_api.py",
+      "lines": 75,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.integration.test_subscribe_api.test_subscribe_creates_pending_subscriber",
+      "type": "Function",
+      "label": "test_subscribe_creates_pending_subscriber",
+      "path": "tests/backend/integration/test_subscribe_api.py",
+      "parent": "tests.backend.integration.test_subscribe_api",
+      "start_line": 11,
+      "end_line": 24
+    },
+    {
+      "id": "tests.backend.integration.test_subscribe_api.test_subscribe_refreshes_unsubscribe_token_for_active_user",
+      "type": "Function",
+      "label": "test_subscribe_refreshes_unsubscribe_token_for_active_user",
+      "path": "tests/backend/integration/test_subscribe_api.py",
+      "parent": "tests.backend.integration.test_subscribe_api",
+      "start_line": 27,
+      "end_line": 44
+    },
+    {
+      "id": "tests.backend.integration.test_subscribe_api.test_unsubscribe_rejects_expired_token",
+      "type": "Function",
+      "label": "test_unsubscribe_rejects_expired_token",
+      "path": "tests/backend/integration/test_subscribe_api.py",
+      "parent": "tests.backend.integration.test_subscribe_api",
+      "start_line": 47,
+      "end_line": 63
+    },
+    {
+      "id": "tests.backend.integration.test_subscribe_api.test_unsubscribe_write_endpoint_is_rate_limited",
+      "type": "Function",
+      "label": "test_unsubscribe_write_endpoint_is_rate_limited",
+      "path": "tests/backend/integration/test_subscribe_api.py",
+      "parent": "tests.backend.integration.test_subscribe_api",
+      "start_line": 66,
+      "end_line": 74
+    },
+    {
+      "id": "tests.backend.unit.test_ai_processor",
+      "type": "Module",
+      "label": "test_ai_processor",
+      "path": "tests/backend/unit/test_ai_processor.py",
+      "lines": 67,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.unit.test_ai_processor.test_parse_title_localization_output_requires_chinese_and_different_title",
+      "type": "Function",
+      "label": "test_parse_title_localization_output_requires_chinese_and_different_title",
+      "path": "tests/backend/unit/test_ai_processor.py",
+      "parent": "tests.backend.unit.test_ai_processor",
+      "start_line": 6,
+      "end_line": 16
+    },
+    {
+      "id": "tests.backend.unit.test_ai_processor.test_split_markdown_blocks_enforces_zero_prefix",
+      "type": "Function",
+      "label": "test_split_markdown_blocks_enforces_zero_prefix",
+      "path": "tests/backend/unit/test_ai_processor.py",
+      "parent": "tests.backend.unit.test_ai_processor",
+      "start_line": 19,
+      "end_line": 25
+    },
+    {
+      "id": "tests.backend.unit.test_ai_processor.test_run_reviewer_rejects_invalid_ids",
+      "type": "Function",
+      "label": "test_run_reviewer_rejects_invalid_ids",
+      "path": "tests/backend/unit/test_ai_processor.py",
+      "parent": "tests.backend.unit.test_ai_processor",
+      "start_line": 28,
+      "end_line": 49
+    },
+    {
+      "id": "tests.backend.unit.test_ai_processor.test_parse_final_summaries_validates_highlight_symmetry",
+      "type": "Function",
+      "label": "test_parse_final_summaries_validates_highlight_symmetry",
+      "path": "tests/backend/unit/test_ai_processor.py",
+      "parent": "tests.backend.unit.test_ai_processor",
+      "start_line": 52,
+      "end_line": 66
+    },
+    {
+      "id": "tests.backend.unit.test_pipeline_rules",
+      "type": "Module",
+      "label": "test_pipeline_rules",
+      "path": "tests/backend/unit/test_pipeline_rules.py",
+      "lines": 209,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.unit.test_pipeline_rules.test_seed_summary_snapshots_assigns_candidate_reasons",
+      "type": "Function",
+      "label": "test_seed_summary_snapshots_assigns_candidate_reasons",
+      "path": "tests/backend/unit/test_pipeline_rules.py",
+      "parent": "tests.backend.unit.test_pipeline_rules",
+      "start_line": 9,
+      "end_line": 77
+    },
+    {
+      "id": "tests.backend.unit.test_pipeline_rules.test_process_category_batch_backfills_after_rejection",
+      "type": "Function",
+      "label": "test_process_category_batch_backfills_after_rejection",
+      "path": "tests/backend/unit/test_pipeline_rules.py",
+      "parent": "tests.backend.unit.test_pipeline_rules",
+      "start_line": 80,
+      "end_line": 171
+    },
+    {
+      "id": "tests.backend.unit.test_pipeline_rules.fake_run_ai_batch",
+      "type": "Function",
+      "label": "fake_run_ai_batch",
+      "path": "tests/backend/unit/test_pipeline_rules.py",
+      "parent": "tests.backend.unit.test_pipeline_rules",
+      "start_line": 121,
+      "end_line": 151
+    },
+    {
+      "id": "tests.backend.unit.test_pipeline_rules.test_process_category_batch_raises_when_baseline_cannot_be_met",
+      "type": "Function",
+      "label": "test_process_category_batch_raises_when_baseline_cannot_be_met",
+      "path": "tests/backend/unit/test_pipeline_rules.py",
+      "parent": "tests.backend.unit.test_pipeline_rules",
+      "start_line": 174,
+      "end_line": 208
+    },
+    {
+      "id": "tests.backend.unit.test_scorer",
+      "type": "Module",
+      "label": "test_scorer",
+      "path": "tests/backend/unit/test_scorer.py",
+      "lines": 62,
+      "lang": "python"
+    },
+    {
+      "id": "tests.backend.unit.test_scorer.test_score_paper_accumulates_expected_signals",
+      "type": "Function",
+      "label": "test_score_paper_accumulates_expected_signals",
+      "path": "tests/backend/unit/test_scorer.py",
+      "parent": "tests.backend.unit.test_scorer",
+      "start_line": 6,
+      "end_line": 21
+    },
+    {
+      "id": "tests.backend.unit.test_scorer.test_practitioner_keyword_matching_uses_boundaries",
+      "type": "Function",
+      "label": "test_practitioner_keyword_matching_uses_boundaries",
+      "path": "tests/backend/unit/test_scorer.py",
+      "parent": "tests.backend.unit.test_scorer",
+      "start_line": 24,
+      "end_line": 38
+    },
+    {
+      "id": "tests.backend.unit.test_scorer.test_threshold_category_boundaries",
+      "type": "Function",
+      "label": "test_threshold_category_boundaries",
+      "path": "tests/backend/unit/test_scorer.py",
+      "parent": "tests.backend.unit.test_scorer",
+      "start_line": 50,
+      "end_line": 51
+    },
+    {
+      "id": "tests.backend.unit.test_scorer.test_direction_detection_respects_taxonomy_order",
+      "type": "Function",
+      "label": "test_direction_detection_respects_taxonomy_order",
+      "path": "tests/backend/unit/test_scorer.py",
+      "parent": "tests.backend.unit.test_scorer",
+      "start_line": 54,
+      "end_line": 61
+    },
+    {
+      "id": "tests.conftest",
+      "type": "Module",
+      "label": "conftest",
+      "path": "tests/conftest.py",
+      "lines": 11,
+      "lang": "python"
+    },
+    {
+      "id": "tests.fixtures.frontend-data",
+      "type": "Module",
+      "label": "frontend-data",
+      "path": "tests/fixtures/frontend-data.js",
+      "lines": 110,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.frontend.detail.spec",
+      "type": "Module",
+      "label": "spec",
+      "path": "tests/frontend/detail.spec.js",
+      "lines": 58,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.frontend.helpers",
+      "type": "Module",
+      "label": "helpers",
+      "path": "tests/frontend/helpers.js",
+      "lines": 17,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.frontend.helpers.createTestRouter",
+      "type": "Function",
+      "label": "createTestRouter",
+      "path": "tests/frontend/helpers.js",
+      "parent": "tests.frontend.helpers",
+      "start_line": 7,
+      "end_line": 16
+    },
+    {
+      "id": "tests.frontend.home.spec",
+      "type": "Module",
+      "label": "spec",
+      "path": "tests/frontend/home.spec.js",
+      "lines": 58,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.frontend.setup",
+      "type": "Module",
+      "label": "setup",
+      "path": "tests/frontend/setup.js",
+      "lines": 32,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.frontend.setup.ResizeObserverMock",
+      "type": "Class",
+      "label": "ResizeObserverMock",
+      "path": "tests/frontend/setup.js",
+      "parent": "tests.frontend.setup",
+      "start_line": 22,
+      "end_line": 26
+    },
+    {
+      "id": "tests.frontend.setup.ResizeObserverMock.observe",
+      "type": "Function",
+      "label": "observe",
+      "path": "tests/frontend/setup.js",
+      "parent": "tests.frontend.setup.ResizeObserverMock",
+      "start_line": 23,
+      "end_line": 23
+    },
+    {
+      "id": "tests.frontend.setup.ResizeObserverMock.unobserve",
+      "type": "Function",
+      "label": "unobserve",
+      "path": "tests/frontend/setup.js",
+      "parent": "tests.frontend.setup.ResizeObserverMock",
+      "start_line": 24,
+      "end_line": 24
+    },
+    {
+      "id": "tests.frontend.setup.ResizeObserverMock.disconnect",
+      "type": "Function",
+      "label": "disconnect",
+      "path": "tests/frontend/setup.js",
+      "parent": "tests.frontend.setup.ResizeObserverMock",
+      "start_line": 25,
+      "end_line": 25
+    },
+    {
+      "id": "tests.frontend.sources.spec",
+      "type": "Module",
+      "label": "spec",
+      "path": "tests/frontend/sources.spec.js",
+      "lines": 43,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.frontend.topic.spec",
+      "type": "Module",
+      "label": "spec",
+      "path": "tests/frontend/topic.spec.js",
+      "lines": 44,
+      "lang": "javascript"
+    },
+    {
+      "id": "tests.live",
+      "type": "Module",
+      "label": "live",
+      "path": "tests/live/__init__.py",
+      "lines": 2,
+      "lang": "python"
+    },
+    {
+      "id": "tests.live.helpers",
+      "type": "Module",
+      "label": "helpers",
+      "path": "tests/live/helpers.py",
+      "lines": 38,
+      "lang": "python"
+    },
+    {
+      "id": "tests.live.helpers.probe_live_dates",
+      "type": "Function",
+      "label": "probe_live_dates",
+      "path": "tests/live/helpers.py",
+      "parent": "tests.live.helpers",
+      "start_line": 7,
+      "end_line": 37
+    },
+    {
+      "id": "tests.live.test_crawler_live",
+      "type": "Module",
+      "label": "test_crawler_live",
+      "path": "tests/live/test_crawler_live.py",
+      "lines": 74,
+      "lang": "python"
+    },
+    {
+      "id": "tests.live.test_crawler_live.live_probe",
+      "type": "Function",
+      "label": "live_probe",
+      "path": "tests/live/test_crawler_live.py",
+      "parent": "tests.live.test_crawler_live",
+      "start_line": 15,
+      "end_line": 16
+    },
+    {
+      "id": "tests.live.test_crawler_live.test_fetch_hf_papers_live",
+      "type": "Function",
+      "label": "test_fetch_hf_papers_live",
+      "path": "tests/live/test_crawler_live.py",
+      "parent": "tests.live.test_crawler_live",
+      "start_line": 19,
+      "end_line": 28
+    },
+    {
+      "id": "tests.live.test_crawler_live.test_fetch_arxiv_papers_live",
+      "type": "Function",
+      "label": "test_fetch_arxiv_papers_live",
+      "path": "tests/live/test_crawler_live.py",
+      "parent": "tests.live.test_crawler_live",
+      "start_line": 31,
+      "end_line": 41
+    },
+    {
+      "id": "tests.live.test_crawler_live.test_fetch_github_trending_live",
+      "type": "Function",
+      "label": "test_fetch_github_trending_live",
+      "path": "tests/live/test_crawler_live.py",
+      "parent": "tests.live.test_crawler_live",
+      "start_line": 44,
+      "end_line": 49
+    },
+    {
+      "id": "tests.live.test_crawler_live.test_fetch_semantic_scholar_citation_count_live",
+      "type": "Function",
+      "label": "test_fetch_semantic_scholar_citation_count_live",
+      "path": "tests/live/test_crawler_live.py",
+      "parent": "tests.live.test_crawler_live",
+      "start_line": 52,
+      "end_line": 59
+    },
+    {
+      "id": "tests.live.test_crawler_live.test_fetch_papers_end_to_end_live",
+      "type": "Function",
+      "label": "test_fetch_papers_end_to_end_live",
+      "path": "tests/live/test_crawler_live.py",
+      "parent": "tests.live.test_crawler_live",
+      "start_line": 62,
+      "end_line": 73
+    },
+    {
+      "id": "tests.smoke.test_backend_import",
+      "type": "Module",
+      "label": "test_backend_import",
+      "path": "tests/smoke/test_backend_import.py",
+      "lines": 11,
+      "lang": "python"
+    },
+    {
+      "id": "tests.smoke.test_backend_import.test_backend_import_smoke",
+      "type": "Function",
+      "label": "test_backend_import_smoke",
+      "path": "tests/smoke/test_backend_import.py",
+      "parent": "tests.smoke.test_backend_import",
+      "start_line": 9,
+      "end_line": 10
+    },
+    {
+      "id": "tests.smoke.test_backend_scripts",
+      "type": "Module",
+      "label": "test_backend_scripts",
+      "path": "tests/smoke/test_backend_scripts.py",
+      "lines": 32,
+      "lang": "python"
+    },
+    {
+      "id": "tests.smoke.test_backend_scripts.test_backend_compileall_smoke",
+      "type": "Function",
+      "label": "test_backend_compileall_smoke",
+      "path": "tests/smoke/test_backend_scripts.py",
+      "parent": "tests.smoke.test_backend_scripts",
+      "start_line": 14,
+      "end_line": 21
+    },
+    {
+      "id": "tests.smoke.test_backend_scripts.test_backfill_script_import_smoke",
+      "type": "Function",
+      "label": "test_backfill_script_import_smoke",
+      "path": "tests/smoke/test_backend_scripts.py",
+      "parent": "tests.smoke.test_backend_scripts",
+      "start_line": 24,
+      "end_line": 31
+    },
+    {
+      "id": "tests.smoke.test_frontend_build",
+      "type": "Module",
+      "label": "test_frontend_build",
+      "path": "tests/smoke/test_frontend_build.py",
+      "lines": 22,
+      "lang": "python"
+    },
+    {
+      "id": "tests.smoke.test_frontend_build.test_frontend_build_smoke",
+      "type": "Function",
+      "label": "test_frontend_build_smoke",
+      "path": "tests/smoke/test_frontend_build.py",
+      "parent": "tests.smoke.test_frontend_build",
+      "start_line": 12,
+      "end_line": 21
+    }
+  ],
+  "edges": [
+    {
+      "source": "backend.app.api.v1",
+      "target": "fastapi",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1",
+      "target": "app.api.v1",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "backend.app.api.v1.papers._normalize_authors",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "backend.app.api.v1.papers._serialize_list_item",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "backend.app.api.v1.papers.get_papers",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "backend.app.api.v1.papers.get_paper_detail",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "fastapi",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "sqlalchemy",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "app.db.session",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.papers",
+      "target": "app.schemas.paper",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "backend.app.api.v1.rss.get_rss",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "fastapi",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "app.core.config",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "app.db.session",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.rss",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.check_rate_limit",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.enforce_write_rate_limit",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.mock_send_email",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.build_unsubscribe_link",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.subscribe",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.verify_subscription",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "backend.app.api.v1.subscribe.unsubscribe",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "time",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "uuid",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "collections",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "threading",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "fastapi",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "fastapi.responses",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "app.core.config",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "app.db.session",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.api.v1.subscribe",
+      "target": "app.schemas.paper",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.core.config",
+      "target": "backend.app.core.config.Settings",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.core.config",
+      "target": "backend.app.core.config.Config",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.core.config",
+      "target": "pydantic_settings",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.core.specs",
+      "target": "backend.app.core.specs.build_literal_boundary_pattern",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.core.specs",
+      "target": "re",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.db.session",
+      "target": "backend.app.db.session.get_db",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.db.session",
+      "target": "sqlalchemy",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.db.session",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.db.session",
+      "target": "app.core.config",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.db.session",
+      "target": "app.models.base",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "backend.app.main.http_exception_handler",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "backend.app.main.validation_exception_handler",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "backend.app.main.generic_exception_handler",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "backend.app.main.read_root",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "fastapi",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "fastapi.middleware.cors",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "fastapi.exceptions",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "fastapi.responses",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.main",
+      "target": "app.api.v1",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models",
+      "target": "app.models.base",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models.base",
+      "target": "sqlalchemy.ext.declarative",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "backend.app.models.domain.Paper",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "backend.app.models.domain.PaperSummary",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "backend.app.models.domain.Subscriber",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "backend.app.models.domain.SystemTaskLog",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "sqlalchemy",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "sqlalchemy.sql",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "app.core.specs",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.models.domain",
+      "target": "app.models.base",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.ResponseModel",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.AuthorModel",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.PaperListItem",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.PaperListPayload",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.PaperListResponseModel",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.PaperDetail",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.PaperDetailResponseModel",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.SubscribeRequest",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "backend.app.schemas.paper.UnsubscribeRequest",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.schemas.paper",
+      "target": "pydantic",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "backend.app.services.ai_processor.AIProcessor",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor.__init__",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor._call_llm",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor.run_editor",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor.localize_titles",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor.run_writer",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor.run_reviewer",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor.parse_final_summaries",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor._split_markdown_blocks",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor._validate_exact_id_set",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor._extract_markdown_bullets",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor.AIProcessor",
+      "target": "backend.app.services.ai_processor.AIProcessor._parse_title_localization_output",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "json",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "os",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "re",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "requests",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.ai_processor",
+      "target": "app.core.config",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.crawler",
+      "target": "backend.app.services.crawler.Crawler",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler.__init__",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler.fetch_papers",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler.enrich_metadata",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._fetch_citation_count",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._fetch_github_trending",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._fetch_hf_papers",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._fetch_arxiv_papers",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._parse_arxiv_xml",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._normalize_hf_data",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._extract_github_repos",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler.Crawler",
+      "target": "backend.app.services.crawler.Crawler._normalize_text",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.crawler",
+      "target": "re",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.crawler",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.crawler",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.crawler",
+      "target": "requests",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.crawler",
+      "target": "app.core.config",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.filter",
+      "target": "backend.app.services.filter.Filter",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.filter.Filter",
+      "target": "backend.app.services.filter.Filter.__init__",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.filter.Filter",
+      "target": "backend.app.services.filter.Filter.process",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.filter",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "backend.app.services.pipeline.Pipeline",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline.__init__",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline.run",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._start_task",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._upsert_papers",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._reset_issue_snapshots",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._seed_summary_snapshots",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._process_category_batch",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._run_ai_batch",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._promote_summary",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._demote_summary",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._apply_narrative",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._resolve_issue_date",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline.Pipeline",
+      "target": "backend.app.services.pipeline.Pipeline._ensure_date",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "traceback",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "app.db.session",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "app.services.ai_processor",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "app.services.crawler",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "app.services.scorer",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.pipeline",
+      "target": "app.core.specs",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.scorer",
+      "target": "backend.app.services.scorer.Scorer",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer.score_paper",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._matches_top_institution",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._matches_top_conference",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._has_code_signal",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._matches_practitioner_keywords",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._detect_direction",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._determine_threshold_category",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._title_abstract_text",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer.Scorer",
+      "target": "backend.app.services.scorer.Scorer._iter_affiliations",
+      "type": "contains"
+    },
+    {
+      "source": "backend.app.services.scorer",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "backend.app.services.scorer",
+      "target": "app.core.specs",
+      "type": "imports"
+    },
+    {
+      "source": "backend.scripts.backfill_title_zh",
+      "target": "backend.scripts.backfill_title_zh.main",
+      "type": "contains"
+    },
+    {
+      "source": "backend.scripts.backfill_title_zh",
+      "target": "os",
+      "type": "imports"
+    },
+    {
+      "source": "backend.scripts.backfill_title_zh",
+      "target": "sys",
+      "type": "imports"
+    },
+    {
+      "source": "backend.scripts.backfill_title_zh",
+      "target": "app.db.session",
+      "type": "imports"
+    },
+    {
+      "source": "backend.scripts.backfill_title_zh",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "backend.scripts.backfill_title_zh",
+      "target": "app.services.ai_processor",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.api.papers",
+      "target": "frontend.src.api.papers.getPapers",
+      "type": "contains"
+    },
+    {
+      "source": "frontend.src.api.papers",
+      "target": "frontend.src.api.papers.getPaperDetail",
+      "type": "contains"
+    },
+    {
+      "source": "frontend.src.api.papers",
+      "target": "frontend.src.api.papers.subscribeEmail",
+      "type": "contains"
+    },
+    {
+      "source": "frontend.src.api.papers",
+      "target": "frontend.src.api.papers.unsubscribeEmail",
+      "type": "contains"
+    },
+    {
+      "source": "frontend.src.api.papers",
+      "target": "../utils/request",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.main",
+      "target": "vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.main",
+      "target": "element-plus",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.main",
+      "target": "element-plus/dist/index.css",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.main",
+      "target": "./App.vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.main",
+      "target": "./router",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.main",
+      "target": "./style.css",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.router.index",
+      "target": "vue-router",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.router.index",
+      "target": "../views/Home.vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.router.index",
+      "target": "../views/Detail.vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.router.index",
+      "target": "../views/Unsubscribe.vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.router.index",
+      "target": "../views/Sources.vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.router.index",
+      "target": "../views/Topic.vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.utils.request",
+      "target": "axios",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.src.utils.request",
+      "target": "element-plus",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.vite.config",
+      "target": "vite",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.vite.config",
+      "target": "@vitejs/plugin-vue",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.vitest.config",
+      "target": "vitest/config",
+      "type": "imports"
+    },
+    {
+      "source": "frontend.vitest.config",
+      "target": "@vitejs/plugin-vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.clear_rate_limit_store",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.db_engine",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.session_factory",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.db_session",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.api_client",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.override_get_db",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.sample_paper_payload",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.seeded_papers",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "tests.backend.conftest.active_subscriber_seed",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "fastapi.testclient",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "sqlalchemy",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "sqlalchemy.orm",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "app.api.v1.subscribe",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "app.db.session",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "app.main",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "app.models.base",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.conftest",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.integration.test_papers_api",
+      "target": "tests.backend.integration.test_papers_api.test_get_papers_excludes_candidates_by_default",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_papers_api",
+      "target": "tests.backend.integration.test_papers_api.test_get_papers_include_candidates_preserves_null_narratives",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_papers_api",
+      "target": "tests.backend.integration.test_papers_api.test_get_paper_detail_returns_latest_summary_and_candidate_null_fields",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_papers_api",
+      "target": "tests.backend.integration.test_papers_api.test_get_paper_detail_returns_404_for_missing_paper",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_papers_api",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "tests.backend.integration.test_subscribe_api.test_subscribe_creates_pending_subscriber",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "tests.backend.integration.test_subscribe_api.test_subscribe_refreshes_unsubscribe_token_for_active_user",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "tests.backend.integration.test_subscribe_api.test_unsubscribe_rejects_expired_token",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "tests.backend.integration.test_subscribe_api.test_unsubscribe_write_endpoint_is_rate_limited",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.integration.test_subscribe_api",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_ai_processor",
+      "target": "tests.backend.unit.test_ai_processor.test_parse_title_localization_output_requires_chinese_and_different_title",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_ai_processor",
+      "target": "tests.backend.unit.test_ai_processor.test_split_markdown_blocks_enforces_zero_prefix",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_ai_processor",
+      "target": "tests.backend.unit.test_ai_processor.test_run_reviewer_rejects_invalid_ids",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_ai_processor",
+      "target": "tests.backend.unit.test_ai_processor.test_parse_final_summaries_validates_highlight_symmetry",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_ai_processor",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_ai_processor",
+      "target": "app.services.ai_processor",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "tests.backend.unit.test_pipeline_rules.test_seed_summary_snapshots_assigns_candidate_reasons",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "tests.backend.unit.test_pipeline_rules.test_process_category_batch_backfills_after_rejection",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "tests.backend.unit.test_pipeline_rules.fake_run_ai_batch",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "tests.backend.unit.test_pipeline_rules.test_process_category_batch_raises_when_baseline_cannot_be_met",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "types",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "app.models.domain",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_pipeline_rules",
+      "target": "app.services.pipeline",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_scorer",
+      "target": "tests.backend.unit.test_scorer.test_score_paper_accumulates_expected_signals",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_scorer",
+      "target": "tests.backend.unit.test_scorer.test_practitioner_keyword_matching_uses_boundaries",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_scorer",
+      "target": "tests.backend.unit.test_scorer.test_threshold_category_boundaries",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_scorer",
+      "target": "tests.backend.unit.test_scorer.test_direction_detection_respects_taxonomy_order",
+      "type": "contains"
+    },
+    {
+      "source": "tests.backend.unit.test_scorer",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.backend.unit.test_scorer",
+      "target": "app.services.scorer",
+      "type": "imports"
+    },
+    {
+      "source": "tests.conftest",
+      "target": "sys",
+      "type": "imports"
+    },
+    {
+      "source": "tests.conftest",
+      "target": "pathlib",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.detail.spec",
+      "target": "vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.detail.spec",
+      "target": "vitest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.detail.spec",
+      "target": "../../frontend/test-utils.js",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.detail.spec",
+      "target": "../fixtures/frontend-data",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.detail.spec",
+      "target": "./helpers",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.detail.spec",
+      "target": "../../frontend/src/views/Detail.vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.helpers",
+      "target": "tests.frontend.helpers.createTestRouter",
+      "type": "contains"
+    },
+    {
+      "source": "tests.frontend.helpers",
+      "target": "../../frontend/test-utils.js",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.home.spec",
+      "target": "vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.home.spec",
+      "target": "vitest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.home.spec",
+      "target": "../../frontend/test-utils.js",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.home.spec",
+      "target": "../fixtures/frontend-data",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.home.spec",
+      "target": "./helpers",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.home.spec",
+      "target": "../../frontend/src/views/Home.vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.setup",
+      "target": "tests.frontend.setup.ResizeObserverMock",
+      "type": "contains"
+    },
+    {
+      "source": "tests.frontend.setup.ResizeObserverMock",
+      "target": "tests.frontend.setup.ResizeObserverMock.observe",
+      "type": "contains"
+    },
+    {
+      "source": "tests.frontend.setup.ResizeObserverMock",
+      "target": "tests.frontend.setup.ResizeObserverMock.unobserve",
+      "type": "contains"
+    },
+    {
+      "source": "tests.frontend.setup.ResizeObserverMock",
+      "target": "tests.frontend.setup.ResizeObserverMock.disconnect",
+      "type": "contains"
+    },
+    {
+      "source": "tests.frontend.setup",
+      "target": "vitest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.sources.spec",
+      "target": "vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.sources.spec",
+      "target": "vitest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.sources.spec",
+      "target": "../../frontend/test-utils.js",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.sources.spec",
+      "target": "../fixtures/frontend-data",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.sources.spec",
+      "target": "./helpers",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.sources.spec",
+      "target": "../../frontend/src/views/Sources.vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.topic.spec",
+      "target": "vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.topic.spec",
+      "target": "vitest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.topic.spec",
+      "target": "../../frontend/test-utils.js",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.topic.spec",
+      "target": "../fixtures/frontend-data",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.topic.spec",
+      "target": "./helpers",
+      "type": "imports"
+    },
+    {
+      "source": "tests.frontend.topic.spec",
+      "target": "../../frontend/src/views/Topic.vue",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.helpers",
+      "target": "tests.live.helpers.probe_live_dates",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.helpers",
+      "target": "datetime",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.helpers",
+      "target": "typing",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.helpers",
+      "target": "app.services.crawler",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.test_crawler_live.live_probe",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.test_crawler_live.test_fetch_hf_papers_live",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.test_crawler_live.test_fetch_arxiv_papers_live",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.test_crawler_live.test_fetch_github_trending_live",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.test_crawler_live.test_fetch_semantic_scholar_citation_count_live",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.test_crawler_live.test_fetch_papers_end_to_end_live",
+      "type": "contains"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "re",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "app.services.crawler",
+      "type": "imports"
+    },
+    {
+      "source": "tests.live.test_crawler_live",
+      "target": "tests.live.helpers",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_import",
+      "target": "tests.smoke.test_backend_import.test_backend_import_smoke",
+      "type": "contains"
+    },
+    {
+      "source": "tests.smoke.test_backend_import",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_import",
+      "target": "app.main",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "tests.smoke.test_backend_scripts.test_backend_compileall_smoke",
+      "type": "contains"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "tests.smoke.test_backend_scripts.test_backfill_script_import_smoke",
+      "type": "contains"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "importlib.util",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "subprocess",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "sys",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "pathlib",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_backend_scripts",
+      "target": "tests.conftest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_frontend_build",
+      "target": "tests.smoke.test_frontend_build.test_frontend_build_smoke",
+      "type": "contains"
+    },
+    {
+      "source": "tests.smoke.test_frontend_build",
+      "target": "subprocess",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_frontend_build",
+      "target": "pathlib",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_frontend_build",
+      "target": "pytest",
+      "type": "imports"
+    },
+    {
+      "source": "tests.smoke.test_frontend_build",
+      "target": "tests.conftest",
+      "type": "imports"
+    }
+  ],
+  "warnings": [
+    "some languages were parsed with module-only coverage because no structural query template is bundled: sql (2 files), vue (7 files)"
+  ]
+}

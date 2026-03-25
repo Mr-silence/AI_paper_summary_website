@@ -1,0 +1,166 @@
+import json
+import os
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+from sqlalchemy import func
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from app.core.config import settings
+from app.db.session import SessionLocal, rebuild_engine
+from app.models.domain import PaperSummary, SystemTaskLog
+from app.services.crawler import Crawler
+from app.services.pipeline import Pipeline
+from app.services.scorer import Scorer
+from scripts.check_kimi_api import run_checks
+from scripts.setup_local_db import ensure_database_ready
+from scripts.setup_local_mysql import ensure_mysql_server_ready
+
+
+PROMPT_FILES = [
+    Path(__file__).resolve().parents[1] / "prompts" / "editor_prompt.md",
+    Path(__file__).resolve().parents[1] / "prompts" / "writer_prompt.md",
+    Path(__file__).resolve().parents[1] / "prompts" / "reviewer_prompt.md",
+]
+
+
+def _ensure_prompts_exist() -> None:
+    missing = [str(path) for path in PROMPT_FILES if not path.exists()]
+    if missing:
+        raise FileNotFoundError(f"Missing prompt files: {missing}")
+
+
+def _probe_issue_date() -> dict[str, object]:
+    crawler = Crawler()
+    scorer = Scorer()
+    today = datetime.now(timezone(timedelta(hours=8))).date()
+    probe_days = int(settings.PIPELINE_PROBE_DAYS or 14)
+
+    db = SessionLocal()
+    try:
+        for offset in range(probe_days):
+            issue_date = today - timedelta(days=offset)
+            existing_task = (
+                db.query(SystemTaskLog)
+                .filter(SystemTaskLog.issue_date == issue_date, SystemTaskLog.status == "SUCCESS")
+                .first()
+            )
+            if existing_task is not None:
+                print(f"[probe] skip {issue_date.isoformat()} because SUCCESS already exists", flush=True)
+                continue
+
+            fetch_date = issue_date - timedelta(days=3)
+            print(
+                f"[probe] evaluating issue_date={issue_date.isoformat()} fetch_date={fetch_date.isoformat()}",
+                flush=True,
+            )
+            papers = crawler.fetch_papers(fetch_date=fetch_date.isoformat())
+            scored = [scorer.score_paper(paper) for paper in papers]
+            focus_count = sum(1 for paper in scored if paper["score"] >= 80)
+            watching_count = sum(1 for paper in scored if 50 <= paper["score"] < 80)
+            print(
+                (
+                    f"[probe] issue_date={issue_date.isoformat()} fetched={len(papers)} "
+                    f"focus={focus_count} watching={watching_count}"
+                ),
+                flush=True,
+            )
+
+            if focus_count >= 3 and watching_count >= 8:
+                return {
+                    "issue_date": issue_date.isoformat(),
+                    "fetch_date": fetch_date.isoformat(),
+                    "fetched_count": len(papers),
+                    "focus_count": focus_count,
+                    "watching_count": watching_count,
+                }
+    finally:
+        db.close()
+
+    raise RuntimeError(
+        f"No eligible issue_date was found in the last {probe_days} days that satisfies focus>=3 and watching>=8."
+    )
+
+
+def run_pipeline_once() -> dict[str, object]:
+    print("[run] validating prompt files", flush=True)
+    _ensure_prompts_exist()
+    print("[run] ensuring local MySQL is ready", flush=True)
+    mysql_status = ensure_mysql_server_ready()
+    if mysql_status.get("connection_mode") != "tcp":
+        raise RuntimeError("System MySQL bootstrap succeeded, but the application is not using TCP localhost:3306.")
+    settings.MYSQL_UNIX_SOCKET = ""
+    rebuild_engine()
+    print("[run] ensuring database schema is ready", flush=True)
+    db_status = ensure_database_ready()
+    print("[run] checking Kimi connectivity", flush=True)
+    kimi_status = run_checks()
+    fixed_issue_date = os.environ.get("PIPELINE_FIXED_ISSUE_DATE", "").strip()
+    if fixed_issue_date:
+        selected_issue_date = datetime.strptime(fixed_issue_date, "%Y-%m-%d").date()
+        selected_fetch_date = selected_issue_date - timedelta(days=3)
+        probe = {
+            "issue_date": selected_issue_date.isoformat(),
+            "fetch_date": selected_fetch_date.isoformat(),
+        }
+        print(
+            f"[run] using fixed issue_date={probe['issue_date']} fetch_date={probe['fetch_date']}",
+            flush=True,
+        )
+    else:
+        print("[run] probing eligible issue_date", flush=True)
+        probe = _probe_issue_date()
+    print(
+        (
+            f"[run] selected issue_date={probe['issue_date']} "
+            f"(fetch_date={probe['fetch_date']}"
+            f"{', fetched=' + str(probe['fetched_count']) if 'fetched_count' in probe else ''})"
+        ),
+        flush=True,
+    )
+
+    db = SessionLocal()
+    try:
+        print("[run] executing pipeline", flush=True)
+        Pipeline(db).run(probe["issue_date"])
+
+        summary_counts = dict(
+            db.query(PaperSummary.category, func.count(PaperSummary.id))
+            .filter(PaperSummary.issue_date == probe["issue_date"])
+            .group_by(PaperSummary.category)
+            .all()
+        )
+        task_log = (
+            db.query(SystemTaskLog)
+            .filter(SystemTaskLog.issue_date == probe["issue_date"])
+            .first()
+        )
+        if task_log is None:
+            raise RuntimeError("Pipeline finished without creating a system_task_log row.")
+
+        return {
+            "mysql": mysql_status,
+            "database": db_status,
+            "kimi": kimi_status,
+            "selected_issue_date": probe["issue_date"],
+            "selected_fetch_date": probe["fetch_date"],
+            "fetched_count": task_log.fetched_count,
+            "processed_count": task_log.processed_count,
+            "summary_counts": summary_counts,
+            "system_task_log_status": task_log.status,
+        }
+    finally:
+        db.close()
+
+
+def main() -> None:
+    result = run_pipeline_once()
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()

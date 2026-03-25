@@ -1,0 +1,231 @@
+{
+  "analysis_period_days": 90,
+  "stats": {
+    "total_commits": 15,
+    "total_authors": 1
+  },
+  "hotspots": [
+    {
+      "path": "CODEX_MEMORY.md",
+      "changes": 13,
+      "risk": "medium"
+    },
+    {
+      "path": "geminicli.md",
+      "changes": 7,
+      "risk": "medium"
+    },
+    {
+      "path": "Detailed_PRD.md",
+      "changes": 6,
+      "risk": "medium"
+    },
+    {
+      "path": "frontend/src/views/Detail.vue",
+      "changes": 4,
+      "risk": "low"
+    },
+    {
+      "path": "frontend/src/views/Home.vue",
+      "changes": 4,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/api/v1/papers.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/api/v1/subscribe.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/models/domain.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/schemas/paper.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/services/ai_processor.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/services/crawler.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/services/pipeline.py",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/prompts/writer_prompt.md",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "database/schema.sql",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "frontend/src/App.vue",
+      "changes": 3,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/api/v1/rss.py",
+      "changes": 2,
+      "risk": "low"
+    },
+    {
+      "path": "backend/app/services/scorer.py",
+      "changes": 2,
+      "risk": "low"
+    },
+    {
+      "path": "backend/prompts/editor_prompt.md",
+      "changes": 2,
+      "risk": "low"
+    },
+    {
+      "path": "backend/prompts/reviewer_prompt.md",
+      "changes": 2,
+      "risk": "low"
+    },
+    {
+      "path": "frontend/src/views/Sources.vue",
+      "changes": 2,
+      "risk": "low"
+    }
+  ],
+  "coupling_pairs": [
+    {
+      "file_a": "CODEX_MEMORY.md",
+      "file_b": "geminicli.md",
+      "co_changes": 6,
+      "coupling_score": 0.857
+    },
+    {
+      "file_a": "CODEX_MEMORY.md",
+      "file_b": "Detailed_PRD.md",
+      "co_changes": 5,
+      "coupling_score": 0.833
+    },
+    {
+      "file_a": "Detailed_PRD.md",
+      "file_b": "geminicli.md",
+      "co_changes": 5,
+      "coupling_score": 0.833
+    },
+    {
+      "file_a": "frontend/src/views/Detail.vue",
+      "file_b": "frontend/src/views/Home.vue",
+      "co_changes": 4,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "backend/app/api/v1/subscribe.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "backend/app/models/domain.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "backend/app/schemas/paper.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "backend/app/services/ai_processor.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "backend/app/services/crawler.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "backend/app/services/pipeline.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "database/schema.sql",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "frontend/src/views/Detail.vue",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/papers.py",
+      "file_b": "frontend/src/views/Home.vue",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "backend/app/models/domain.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "backend/app/schemas/paper.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "backend/app/services/ai_processor.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "backend/app/services/crawler.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "backend/app/services/pipeline.py",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "database/schema.sql",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    },
+    {
+      "file_a": "backend/app/api/v1/subscribe.py",
+      "file_b": "frontend/src/views/Detail.vue",
+      "co_changes": 3,
+      "coupling_score": 1.0
+    }
+  ]
+}

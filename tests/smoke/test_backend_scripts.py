@@ -1,0 +1,31 @@
+import importlib.util
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from tests.conftest import BACKEND_DIR
+
+
+pytestmark = pytest.mark.smoke
+
+
+def test_backend_compileall_smoke():
+    result = subprocess.run(
+        [sys.executable, "-m", "compileall", "app", "scripts"],
+        cwd=BACKEND_DIR,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr or result.stdout
+
+
+def test_backfill_script_import_smoke():
+    script_path = BACKEND_DIR / "scripts" / "backfill_title_zh.py"
+    spec = importlib.util.spec_from_file_location("backfill_title_zh", script_path)
+
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert callable(module.main)

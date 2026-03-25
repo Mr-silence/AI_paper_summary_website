@@ -1,0 +1,269 @@
+{
+  "$schema": "nexus-mapper/concept-model/v1",
+  "generated_at": "2026-03-24T18:55:19Z",
+  "repo_path": "/Users/zhangshijie/Desktop/Project/AI_paper_summary_website",
+  "generator": "nexus-mapper v2",
+  "nodes": [
+    {
+      "id": "daily-brief-pipeline",
+      "type": "System",
+      "label": "Daily Brief Pipeline",
+      "responsibility": "抓取论文、执行评分和 AI 解读、处理补位与候选状态迁移，并将期号快照落库。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/services/",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "python",
+        "requests",
+        "sqlalchemy",
+        "moonshot"
+      ],
+      "complexity": "high",
+      "hotspot": false
+    },
+    {
+      "id": "delivery-api",
+      "type": "System",
+      "label": "Delivery API",
+      "responsibility": "提供论文列表、论文详情、订阅、退订和 RSS 接口，并统一 HTTP 响应 envelope。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/api/v1/",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "fastapi",
+        "sqlalchemy",
+        "pydantic"
+      ],
+      "complexity": "medium",
+      "hotspot": true
+    },
+    {
+      "id": "data-model-persistence",
+      "type": "System",
+      "label": "Data Model & Persistence",
+      "responsibility": "维护论文、简报、订阅和任务日志的 ORM 模型、会话工厂与 SQL schema 约束。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/models/",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "sqlalchemy",
+        "mysql",
+        "pydantic-settings"
+      ],
+      "complexity": "medium",
+      "hotspot": true
+    },
+    {
+      "id": "frontend-briefing-ui",
+      "type": "System",
+      "label": "Frontend Briefing UI",
+      "responsibility": "提供双语简报阅读、候选池、Topic 聚合、退订结果页和订阅弹窗，并通过 Axios 访问后端。",
+      "implementation_status": "implemented",
+      "code_path": "frontend/src/",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "vue",
+        "vue-router",
+        "axios",
+        "element-plus"
+      ],
+      "complexity": "medium",
+      "hotspot": true
+    },
+    {
+      "id": "test-smoke-harness",
+      "type": "System",
+      "label": "Test & Smoke Harness",
+      "responsibility": "以 unit、integration、frontend、live、smoke 五层测试保护业务合同、页面渲染与仓库级健康。",
+      "implementation_status": "implemented",
+      "code_path": "tests/",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "pytest",
+        "vitest",
+        "jsdom",
+        "subprocess"
+      ],
+      "complexity": "medium",
+      "hotspot": false
+    },
+    {
+      "id": "t-plus-3-issue-window",
+      "type": "Domain",
+      "label": "T+3 Issue Window",
+      "responsibility": "以 issue_date 为发布期号，固定回看 3 天前的论文作为 fetch_date，确保每日简报窗口稳定。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/services/pipeline.py",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "python",
+        "datetime"
+      ],
+      "complexity": "low",
+      "hotspot": false
+    },
+    {
+      "id": "brief-tier-selection",
+      "type": "Domain",
+      "label": "Brief Tier Selection",
+      "responsibility": "将论文切分为 focus、watching、candidate，并应用容量截断、最低基线和补位规则。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/core/specs.py",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "python"
+      ],
+      "complexity": "medium",
+      "hotspot": false
+    },
+    {
+      "id": "candidate-state-machine",
+      "type": "Domain",
+      "label": "Candidate State Machine",
+      "responsibility": "维护 candidate_reason 和 narrative 字段在 promote、demote、backfill 过程中的原子状态迁移。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/services/pipeline.py",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "python",
+        "sqlalchemy"
+      ],
+      "complexity": "medium",
+      "hotspot": true
+    },
+    {
+      "id": "bilingual-narrative-contract",
+      "type": "Domain",
+      "label": "Bilingual Narrative Contract",
+      "responsibility": "约束 CN/EN summary、highlights、application 场景的对称结构，并区分候选项的无 narrative 展示。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/services/ai_processor.py",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "python",
+        "regex",
+        "llm-api"
+      ],
+      "complexity": "high",
+      "hotspot": true
+    },
+    {
+      "id": "subscription-token-flow",
+      "type": "Domain",
+      "label": "Subscription Token Flow",
+      "responsibility": "通过 verify_token 和 unsub_token 管理订阅验证、退订和 24 小时失效窗口。",
+      "implementation_status": "implemented",
+      "code_path": "backend/app/api/v1/subscribe.py",
+      "evidence_path": null,
+      "evidence_gap": null,
+      "tech_stack": [
+        "fastapi",
+        "sqlalchemy",
+        "uuid"
+      ],
+      "complexity": "medium",
+      "hotspot": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "daily-brief-pipeline",
+      "target": "data-model-persistence",
+      "type": "depends_on",
+      "description": "Pipeline 通过 SessionLocal 和 ORM 模型写入 paper、paper_summary 与 system_task_log。"
+    },
+    {
+      "source": "delivery-api",
+      "target": "data-model-persistence",
+      "type": "depends_on",
+      "description": "API 路由直接查询或更新 ORM 模型并依赖 get_db() 提供数据库会话。"
+    },
+    {
+      "source": "frontend-briefing-ui",
+      "target": "delivery-api",
+      "type": "depends_on",
+      "description": "前端所有当前数据读写都通过 /api/v1/papers、/subscribe、/unsubscribe 访问后端。"
+    },
+    {
+      "source": "test-smoke-harness",
+      "target": "daily-brief-pipeline",
+      "type": "depends_on",
+      "description": "Unit 与 live 测试覆盖 scorer、pipeline rules、crawler 和 AI 解析合同。"
+    },
+    {
+      "source": "test-smoke-harness",
+      "target": "delivery-api",
+      "type": "depends_on",
+      "description": "Integration 测试验证 papers 与 subscribe 端点的读写和错误语义。"
+    },
+    {
+      "source": "test-smoke-harness",
+      "target": "frontend-briefing-ui",
+      "type": "depends_on",
+      "description": "Vitest 页面测试和 frontend build smoke 直接约束前端视图与构建能力。"
+    },
+    {
+      "source": "t-plus-3-issue-window",
+      "target": "daily-brief-pipeline",
+      "type": "depends_on",
+      "description": "issue_date 与 fetch_date 的窗口规则由 Pipeline.run 和 crawler fetch 调用承载。"
+    },
+    {
+      "source": "brief-tier-selection",
+      "target": "daily-brief-pipeline",
+      "type": "depends_on",
+      "description": "focus/watching/candidate 的阈值、容量和最低基线规则在 pipeline 中被执行。"
+    },
+    {
+      "source": "candidate-state-machine",
+      "target": "daily-brief-pipeline",
+      "type": "depends_on",
+      "description": "候选状态的 promote、demote、backfill 逻辑都在 pipeline 内完成。"
+    },
+    {
+      "source": "bilingual-narrative-contract",
+      "target": "daily-brief-pipeline",
+      "type": "depends_on",
+      "description": "Editor/Writer/Reviewer 输出合同和二次重试策略是 pipeline 的核心质量门。"
+    },
+    {
+      "source": "bilingual-narrative-contract",
+      "target": "frontend-briefing-ui",
+      "type": "depends_on",
+      "description": "前端根据 candidate 与非 candidate 状态决定是否渲染 narrative 字段。"
+    },
+    {
+      "source": "subscription-token-flow",
+      "target": "delivery-api",
+      "type": "depends_on",
+      "description": "订阅与退订 token 的生成、验证、过期检查与限流都在 subscribe API 中暴露。"
+    },
+    {
+      "source": "subscription-token-flow",
+      "target": "frontend-briefing-ui",
+      "type": "depends_on",
+      "description": "订阅弹窗与退订结果页分别触发 subscribe/unsubscribe 接口并向用户反馈状态。"
+    }
+  ],
+  "metadata": {
+    "total_files": 63,
+    "total_lines": 4891,
+    "languages": [
+      "javascript",
+      "python",
+      "sql",
+      "vue"
+    ],
+    "git_commits_analyzed": 15,
+    "analysis_days": 90
+  }
+}

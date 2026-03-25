@@ -981,3 +981,13 @@ When continuing work in this repository, read this file first.
   - quantity-first homepage subtitle wording
   - `Sources.vue` candidate tag-type cleanup
   - latest regression and frontend test updates
+
+## Latest Git Action Request (2026-03-26, README + image asset push)
+- User requested pushing the latest markdown/documentation changes and associated project files to GitHub.
+- Current worktree scope for this push:
+  - `README.md`
+  - new screenshots / image assets under `image/`
+- Sensitive-content check result for this pass:
+  - no `.env`, local config, or credential files are present in the pending diff
+  - `README.md` contains only placeholder example values such as `root:password` and `your-kimi-api-key`, not real secrets
+  - no actual API key value was detected in the current push scope

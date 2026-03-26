@@ -363,6 +363,62 @@ cd frontend
 npm run build
 ```
 
+生产环境默认读取 [frontend/.env.production](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/frontend/.env.production)：
+
+```env
+VITE_API_BASE_URL=/api
+```
+
+这样前端在 Ubuntu 服务器上会直接走同源 `/api`，由 `nginx` 反代到 FastAPI。
+
+### 8.4 Ubuntu 生产部署
+
+当前仓库已经补齐了 Ubuntu 单机部署所需的基础资产：
+
+- `nginx` 配置：[deploy/linux/ai-paper-summary.nginx.conf](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/deploy/linux/ai-paper-summary.nginx.conf)
+- `systemd` 服务：[deploy/linux/ai-paper-summary-backend.service](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/deploy/linux/ai-paper-summary-backend.service)
+- 部署说明：[deploy/linux/DEPLOY.md](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/deploy/linux/DEPLOY.md)
+
+生产部署目标固定为：
+
+- 仓库目录：`/srv/ai-paper-summary`
+- 后端：`uvicorn` 监听 `127.0.0.1:8000`
+- 前端：`frontend/dist` 由 `nginx` 直接托管
+- API：浏览器访问 `http://43.155.154.193`，前端通过 `/api` 同源调用后端
+- 数据库：Ubuntu 本机 `mysql-server`
+- 定时任务：`cron` 在 `08:00 / 08:30` 执行更新和日报发送
+
+服务器上的关键环境变量建议如下：
+
+```env
+DATABASE_URL=mysql+pymysql://ai_paper_summary:<password>@localhost:3306/ai_paper_summary
+MYSQL_UNIX_SOCKET=
+BACKEND_PUBLIC_URL=http://43.155.154.193
+FRONTEND_URL=http://43.155.154.193
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=z1332556430@gmail.com
+SMTP_PASSWORD=<gmail-app-password>
+SMTP_FROM_EMAIL=z1332556430@gmail.com
+SMTP_FROM_NAME=AI Paper Summary
+SMTP_USE_STARTTLS=true
+SMTP_USE_SSL=false
+OWNER_ALERT_EMAIL=z1332556430@gmail.com
+```
+
+部署流程摘要：
+
+1. 安装 `git / python3-venv / mysql-server / nginx / nodejs`
+2. 从 GitHub 拉取代码到 `/srv/ai-paper-summary`
+3. 配置 `backend/.env`
+4. 导入 `ai_paper_summary` MySQL 数据
+5. 执行 `scripts/setup_local_db.py`
+6. 构建前端 `npm run build`
+7. 安装 `systemd` 与 `nginx` 配置
+8. 执行 `scripts/install_linux_cron.py`
+
+更完整的命令清单见 [deploy/linux/DEPLOY.md](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/deploy/linux/DEPLOY.md)。
+
 ## 9. 运行脚本
 
 ### 9.1 Linux 定时更新脚本

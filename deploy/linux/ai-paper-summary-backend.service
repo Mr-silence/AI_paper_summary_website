@@ -1,0 +1,17 @@
+[Unit]
+Description=AI Paper Summary Backend
+After=network.target mysql.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/srv/ai-paper-summary/backend
+ExecStart=/srv/ai-paper-summary/backend/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

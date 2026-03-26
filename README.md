@@ -366,10 +366,10 @@ npm run build
 生产环境默认读取 [frontend/.env.production](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/frontend/.env.production)：
 
 ```env
-VITE_API_BASE_URL=/api
+VITE_API_BASE_URL=
 ```
 
-这样前端在 Ubuntu 服务器上会直接走同源 `/api`，由 `nginx` 反代到 FastAPI。
+当前前端 API 模块本身就直接请求 `/api/v1/...`，所以生产环境不再额外附加 base URL，避免出现 `/api/api/v1/...` 的双重前缀。由 `nginx` 负责把这些同源 `/api/...` 请求反代到 FastAPI。
 
 ### 8.4 Ubuntu 生产部署
 

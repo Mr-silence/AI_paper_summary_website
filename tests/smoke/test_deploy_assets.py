@@ -17,4 +17,5 @@ def test_linux_deploy_assets_exist():
 def test_frontend_production_env_uses_same_origin_api():
     env_path = PROJECT_ROOT / "frontend" / ".env.production"
     content = env_path.read_text(encoding="utf-8")
-    assert "VITE_API_BASE_URL=/api" in content
+    assert "VITE_API_BASE_URL=" in content
+    assert "VITE_API_BASE_URL=/api" not in content

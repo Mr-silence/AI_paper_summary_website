@@ -114,7 +114,7 @@ npm install
 npm run build
 ```
 
-`frontend/.env.production` already points the production build to `/api`.
+`frontend/.env.production` keeps `VITE_API_BASE_URL` empty, because the frontend API adapter already requests `/api/v1/...` directly and production should avoid adding a second `/api` prefix.
 
 ## 6. Install systemd and nginx configs
 

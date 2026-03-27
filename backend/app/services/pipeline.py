@@ -58,6 +58,10 @@ class Pipeline:
                 watching_selected,
                 watching_overflow,
             ) = self._select_batches(scored_papers)
+            watching_enabled = bool(settings.PIPELINE_ENABLE_WATCHING)
+            if not watching_enabled:
+                watching_selected = []
+                watching_overflow = []
 
             snapshot_papers = scored_papers
 
@@ -71,7 +75,7 @@ class Pipeline:
                 scored_papers=snapshot_papers,
                 paper_map=paper_map,
                 focus_selected_ids={paper["arxiv_id"] for paper in focus_selected},
-                watching_selected_ids={paper["arxiv_id"] for paper in watching_selected},
+                watching_selected_ids={paper["arxiv_id"] for paper in watching_selected} if watching_enabled else set(),
             )
 
             processed_count += self._process_category_batch(
@@ -80,12 +84,13 @@ class Pipeline:
                 category="focus",
                 target_count=len(focus_selected),
             )
-            processed_count += self._process_category_batch(
-                initial_batch=watching_selected,
-                overflow_batch=watching_overflow,
-                category="watching",
-                target_count=len(watching_selected),
-            )
+            if watching_enabled:
+                processed_count += self._process_category_batch(
+                    initial_batch=watching_selected,
+                    overflow_batch=watching_overflow,
+                    category="watching",
+                    target_count=len(watching_selected),
+                )
 
             if processed_count == 0:
                 raise ValueError(f"No papers passed AI processing for {issue_date.isoformat()}.")

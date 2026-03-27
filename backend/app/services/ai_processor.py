@@ -76,8 +76,9 @@ class AIProcessor:
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
 
+        max_attempts = self._max_retry_attempts(longform)
         last_error: Optional[Exception] = None
-        for attempt in range(max(1, int(settings.KIMI_MAX_RETRIES or 1))):
+        for attempt in range(max_attempts):
             try:
                 self._respect_request_interval(longform)
                 if self._should_stream(longform=longform, response_format=response_format):
@@ -87,29 +88,29 @@ class AIProcessor:
                     content = self._extract_message_content(completion.choices[0].message)
                 if not content:
                     last_error = ValueError("Kimi returned empty content.")
-                    if attempt >= settings.KIMI_MAX_RETRIES - 1:
+                    if attempt >= max_attempts - 1:
                         raise RuntimeError("Kimi returned empty content after retries.") from last_error
-                    time.sleep(self._retry_backoff_seconds(attempt, longform))
+                    time.sleep(self._retry_backoff_seconds(attempt, longform, reason="empty"))
                     continue
                 return content
             except (AuthenticationError, PermissionDeniedError) as exc:
                 raise RuntimeError("Kimi authentication failed. Check KIMI_API_KEY permissions and validity.") from exc
             except RateLimitError as exc:
                 last_error = exc
-                if attempt >= settings.KIMI_MAX_RETRIES - 1:
+                if attempt >= max_attempts - 1:
                     raise RuntimeError("Kimi rate limit exceeded after retries.") from exc
-                time.sleep(self._retry_backoff_seconds(attempt, longform))
+                time.sleep(self._retry_backoff_seconds(attempt, longform, reason="rate_limit"))
             except (APIConnectionError, APITimeoutError) as exc:
                 last_error = exc
-                if attempt >= settings.KIMI_MAX_RETRIES - 1:
+                if attempt >= max_attempts - 1:
                     timeout_label = "longform" if longform else "standard"
                     raise RuntimeError(f"Kimi {timeout_label} request timed out after retries.") from exc
-                time.sleep(self._retry_backoff_seconds(attempt, longform))
+                time.sleep(self._retry_backoff_seconds(attempt, longform, reason="timeout"))
             except APIError as exc:
                 last_error = exc
-                if attempt >= settings.KIMI_MAX_RETRIES - 1:
+                if attempt >= max_attempts - 1:
                     raise RuntimeError(f"Kimi request failed after retries: {exc}") from exc
-                time.sleep(self._retry_backoff_seconds(attempt, longform))
+                time.sleep(self._retry_backoff_seconds(attempt, longform, reason="api_error"))
 
         raise RuntimeError("Kimi request failed without a recoverable response.") from last_error
 
@@ -132,9 +133,14 @@ class AIProcessor:
         return False
 
     @staticmethod
-    def _retry_backoff_seconds(attempt: int, longform: bool) -> int:
-        base_seconds = 60 if longform else 15
-        max_seconds = 180 if longform else 60
+    def _retry_backoff_seconds(attempt: int, longform: bool, reason: str = "generic") -> int:
+        if reason == "rate_limit":
+            base_seconds = 20 if longform else 8
+            max_seconds = 90 if longform else 30
+            return min(base_seconds * (attempt + 1), max_seconds)
+
+        base_seconds = 45 if longform else 12
+        max_seconds = 120 if longform else 45
         return min(base_seconds * (attempt + 1), max_seconds)
 
     def _respect_request_interval(self, longform: bool) -> None:
@@ -147,6 +153,14 @@ class AIProcessor:
     @staticmethod
     def _minimum_request_interval_seconds(longform: bool) -> int:
         return 20 if longform else 5
+
+    @staticmethod
+    def _max_retry_attempts(longform: bool) -> int:
+        configured = max(1, int(settings.KIMI_MAX_RETRIES or 1))
+        if not longform:
+            return configured
+        configured_longform = max(1, int(settings.KIMI_LONGFORM_MAX_RETRIES or configured))
+        return min(configured, configured_longform)
 
     def run_editor(self, locked_papers: Sequence[Dict[str, Any]], category: str) -> str:
         input_text = [f"# Locked {category.title()} Batch", "", "系统已锁定以下论文，请逐篇生成定调：", ""]

@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from app.core.config import settings
 from app.models.domain import Paper, PaperAITrace, PaperSummary, SystemTaskLog
 from app.services.ai_processor import StructuredOutputError
 from app.services.pipeline import Pipeline
@@ -265,6 +266,56 @@ def test_process_category_batch_processes_each_paper_in_isolation():
 
     assert processed_count == 5
     assert calls == [["focus-1"], ["focus-2"], ["focus-3"], ["focus-4"], ["focus-5"]]
+
+
+def test_process_category_batch_stops_when_attempt_cap_is_reached(monkeypatch):
+    summaries = [
+        SimpleNamespace(
+            category="focus",
+            candidate_reason=None,
+            one_line_summary=None,
+            one_line_summary_en=None,
+            core_highlights=None,
+            core_highlights_en=None,
+            application_scenarios=None,
+            application_scenarios_en=None,
+        )
+        for _ in range(8)
+    ]
+    papers = [{"arxiv_id": f"focus-{index}", "_summary": summary} for index, summary in enumerate(summaries, start=1)]
+
+    pipeline = Pipeline.__new__(Pipeline)
+    pipeline._ensure_localized_title = lambda paper: None
+    calls = []
+
+    def always_fail(batch, category):
+        calls.append(batch[0]["arxiv_id"])
+        raise RuntimeError("rate limit")
+
+    pipeline._run_ai_batch = always_fail
+
+    monkeypatch.setattr(settings, "PIPELINE_MAX_CATEGORY_ATTEMPTS", 3)
+    monkeypatch.setattr(settings, "PIPELINE_FOCUS_ATTEMPT_MULTIPLIER", 10)
+
+    processed_count = pipeline._process_category_batch(
+        initial_batch=papers[:5],
+        overflow_batch=papers[5:],
+        category="focus",
+        target_count=5,
+    )
+
+    assert processed_count == 0
+    assert calls == ["focus-1", "focus-2", "focus-3"]
+
+
+def test_max_category_attempts_respects_target_multiplier_and_global_cap(monkeypatch):
+    monkeypatch.setattr(settings, "PIPELINE_MAX_CATEGORY_ATTEMPTS", 25)
+    monkeypatch.setattr(settings, "PIPELINE_FOCUS_ATTEMPT_MULTIPLIER", 4)
+    monkeypatch.setattr(settings, "PIPELINE_WATCHING_ATTEMPT_MULTIPLIER", 2)
+
+    assert Pipeline._max_category_attempts("focus", target_count=5, queued_count=200) == 20
+    assert Pipeline._max_category_attempts("watching", target_count=12, queued_count=200) == 24
+    assert Pipeline._max_category_attempts("focus", target_count=8, queued_count=10) == 10
 
 
 def test_run_ai_batch_persists_editor_writer_and_reviewer_traces(db_session):

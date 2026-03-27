@@ -9,6 +9,7 @@ from app.models.domain import Paper, PaperAITrace, PaperSummary, SystemTaskLog
 from app.services.ai_processor import AIProcessor, StructuredOutputError
 from app.services.crawler import Crawler
 from app.services.scorer import Scorer
+from app.core.config import settings
 from app.core.specs import (
     FOCUS_CAPACITY,
     FOCUS_THRESHOLD,
@@ -246,12 +247,23 @@ class Pipeline:
         accepted_ids = set()
         rejected_blacklist = set()
         queued_batch = list(initial_batch) + list(overflow_batch)
+        attempted_count = 0
+        max_attempts = self._max_category_attempts(category, target_count, len(queued_batch))
 
-        while queued_batch and len(accepted_ids) < target_count:
+        while queued_batch and len(accepted_ids) < target_count and attempted_count < max_attempts:
             paper = queued_batch.pop(0)
             arxiv_id = paper["arxiv_id"]
             if arxiv_id in rejected_blacklist or arxiv_id in accepted_ids:
                 continue
+
+            attempted_count += 1
+            print(
+                (
+                    f"[pipeline][{category}] processing {arxiv_id} "
+                    f"attempted={attempted_count}/{max_attempts} accepted={len(accepted_ids)}/{target_count}"
+                ),
+                flush=True,
+            )
 
             summary = paper["_summary"]
             try:
@@ -277,7 +289,30 @@ class Pipeline:
             self._apply_narrative(summary, result)
             accepted_ids.add(arxiv_id)
 
+        if attempted_count >= max_attempts and len(accepted_ids) < target_count:
+            print(
+                (
+                    f"[pipeline][{category}] reached attempt cap "
+                    f"{max_attempts} with accepted={len(accepted_ids)}/{target_count}; stopping early."
+                ),
+                flush=True,
+            )
+
         return len(accepted_ids)
+
+    @staticmethod
+    def _max_category_attempts(category: str, target_count: int, queued_count: int) -> int:
+        if queued_count <= 0:
+            return 0
+
+        if category == "focus":
+            multiplier = max(1, int(settings.PIPELINE_FOCUS_ATTEMPT_MULTIPLIER or 1))
+        else:
+            multiplier = max(1, int(settings.PIPELINE_WATCHING_ATTEMPT_MULTIPLIER or 1))
+
+        configured_cap = max(1, int(settings.PIPELINE_MAX_CATEGORY_ATTEMPTS or 1))
+        candidate_limit = max(target_count, target_count * multiplier)
+        return min(queued_count, configured_cap, candidate_limit)
 
     def _ensure_localized_title(self, paper: Dict[str, Any]) -> None:
         localized_title = self.ai_processor.localize_title(paper)

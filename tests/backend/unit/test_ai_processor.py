@@ -37,15 +37,22 @@ def test_localize_titles_falls_back_per_paper_when_llm_keeps_failing(monkeypatch
 
 
 def test_retry_backoff_seconds_scales_for_standard_and_longform_requests():
-    assert AIProcessor._retry_backoff_seconds(0, longform=False) == 15
-    assert AIProcessor._retry_backoff_seconds(2, longform=False) == 45
-    assert AIProcessor._retry_backoff_seconds(0, longform=True) == 60
-    assert AIProcessor._retry_backoff_seconds(4, longform=True) == 180
+    assert AIProcessor._retry_backoff_seconds(0, longform=False) == 12
+    assert AIProcessor._retry_backoff_seconds(2, longform=False) == 36
+    assert AIProcessor._retry_backoff_seconds(0, longform=True) == 45
+    assert AIProcessor._retry_backoff_seconds(4, longform=True) == 120
+    assert AIProcessor._retry_backoff_seconds(0, longform=False, reason="rate_limit") == 8
+    assert AIProcessor._retry_backoff_seconds(4, longform=True, reason="rate_limit") == 90
 
 
 def test_minimum_request_interval_seconds_distinguishes_longform():
     assert AIProcessor._minimum_request_interval_seconds(longform=False) == 5
     assert AIProcessor._minimum_request_interval_seconds(longform=True) == 20
+
+
+def test_max_retry_attempts_uses_dedicated_longform_setting():
+    assert AIProcessor._max_retry_attempts(longform=False) == 3
+    assert AIProcessor._max_retry_attempts(longform=True) == 2
 
 
 def test_split_markdown_blocks_enforces_zero_prefix():
@@ -452,7 +459,7 @@ def test_call_llm_retries_empty_content(monkeypatch):
 
     monkeypatch.setattr(processor, "_get_client", lambda timeout_seconds: FakeClient())
     monkeypatch.setattr(processor, "_respect_request_interval", lambda longform: None)
-    monkeypatch.setattr(processor, "_retry_backoff_seconds", lambda attempt, longform: 0)
+    monkeypatch.setattr(processor, "_retry_backoff_seconds", lambda attempt, longform, reason="generic": 0)
 
     assert processor._call_llm("system", "user") == "ok"
     assert calls["count"] == 2

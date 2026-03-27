@@ -10,7 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from app.core.config import settings
 from app.db.session import SessionLocal
-from app.models.domain import SystemTaskLog
+from app.services.issue_pipeline_runner import run_issue_pipeline
 from app.services.notification_service import send_owner_alert, shanghai_today
 from app.services.pipeline import Pipeline
 from scripts.run_pipeline_once import _ensure_prompts_exist
@@ -100,24 +100,11 @@ def run_daily_update_job(
         _ensure_prompts_exist()
         ensure_database()
         _validate_runtime_config()
-
-        with session_factory() as db:
-            pipeline_cls(db).run(issue_date.isoformat())
-            task_log = (
-                db.query(SystemTaskLog)
-                .filter(SystemTaskLog.issue_date == issue_date)
-                .first()
-            )
-            if task_log is None:
-                raise RuntimeError("Pipeline finished without creating a system_task_log row.")
-
-            return {
-                "issue_date": issue_date.isoformat(),
-                "status": task_log.status,
-                "fetched_count": task_log.fetched_count,
-                "processed_count": task_log.processed_count,
-                "finished_at": task_log.finished_at.isoformat() if task_log.finished_at else None,
-            }
+        return run_issue_pipeline(
+            issue_date,
+            session_factory=session_factory,
+            pipeline_cls=pipeline_cls,
+        )
     except Exception as exc:
         subject = f"[AI Paper Summary] Daily update failed: {issue_date.isoformat()}"
         _safe_owner_alert(

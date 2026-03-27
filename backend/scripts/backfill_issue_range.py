@@ -14,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.models.domain import PaperSummary, SystemTaskLog
+from app.services.issue_pipeline_runner import run_issue_pipeline
 from app.services.pipeline import Pipeline
 from scripts.check_kimi_api import run_checks
 from scripts.run_pipeline_once import _ensure_prompts_exist
@@ -130,14 +131,15 @@ def backfill_issue_range(start_date: date, end_date: date) -> dict[str, object]:
             skipped_success += 1
             continue
 
-        db = SessionLocal()
         try:
             print(f"[range] executing pipeline for {issue_date.isoformat()}", flush=True)
-            Pipeline(db).run(issue_date.isoformat())
+            run_issue_pipeline(
+                issue_date,
+                session_factory=SessionLocal,
+                pipeline_cls=Pipeline,
+            )
         except Exception:
             pass
-        finally:
-            db.close()
 
         status, fetched_count, processed_count, summary_counts, error = _summarize_issue_date(issue_date)
         print(

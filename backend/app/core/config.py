@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     SMTP_USE_SSL: bool = False
     OWNER_ALERT_EMAIL: str = "z1332556430@gmail.com"
     HUGGINGFACE_API_URL: str = "https://huggingface.co/api/daily_papers"
+    SEMANTIC_SCHOLAR_TIMEOUT_SECONDS: int = 5
+    CRAWLER_CITATION_MAX_WORKERS: int = 16
 
     model_config = SettingsConfigDict(
         env_file=".env",

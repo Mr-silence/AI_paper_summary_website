@@ -1,5 +1,6 @@
 import re
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
@@ -44,20 +45,42 @@ class Crawler:
     def enrich_metadata(self, papers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         trending_repos = {repo.lower() for repo in self._fetch_github_trending()}
 
+        citation_map = self._fetch_citations_bulk([paper["arxiv_id"] for paper in papers])
         for paper in papers:
-            paper["citations"] = self._fetch_citation_count(paper["arxiv_id"])
+            paper["citations"] = int(citation_map.get(paper["arxiv_id"], 0) or 0)
             paper["is_trending"] = any(
                 repo.lower() in trending_repos for repo in self._extract_github_repos(paper)
             )
 
         return papers
 
+    def _fetch_citations_bulk(self, arxiv_ids: List[str]) -> Dict[str, int]:
+        if not arxiv_ids:
+            return {}
+
+        max_workers = max(1, int(settings.CRAWLER_CITATION_MAX_WORKERS or 1))
+        citation_map: Dict[str, int] = {}
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_map = {
+                executor.submit(self._fetch_citation_count, arxiv_id): arxiv_id
+                for arxiv_id in arxiv_ids
+            }
+            for future in as_completed(future_map):
+                arxiv_id = future_map[future]
+                try:
+                    citation_map[arxiv_id] = int(future.result() or 0)
+                except Exception:
+                    citation_map[arxiv_id] = 0
+
+        return citation_map
+
     def _fetch_citation_count(self, arxiv_id: str) -> int:
         try:
             response = requests.get(
                 f"https://api.semanticscholar.org/graph/v1/paper/ARXIV:{arxiv_id}",
                 params={"fields": "citationCount"},
-                timeout=5,
+                timeout=max(1, int(settings.SEMANTIC_SCHOLAR_TIMEOUT_SECONDS or 1)),
             )
             response.raise_for_status()
             return int(response.json().get("citationCount", 0) or 0)

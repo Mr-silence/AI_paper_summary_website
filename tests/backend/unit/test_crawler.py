@@ -75,3 +75,21 @@ def test_merge_normalized_paper_can_fill_missing_arxiv_fields_from_hf():
     assert merged["abstract"] == hf_paper["abstract"]
     assert merged["upvotes"] == 42
     assert merged["is_hf_daily"] is True
+
+
+def test_fetch_citations_bulk_parallelizes_and_falls_back_to_zero(monkeypatch):
+    crawler = Crawler()
+    calls = []
+
+    def fake_fetch(arxiv_id):
+        calls.append(arxiv_id)
+        if arxiv_id == "bad":
+            raise RuntimeError("boom")
+        return {"a": 3, "b": 9}.get(arxiv_id, 0)
+
+    monkeypatch.setattr(crawler, "_fetch_citation_count", fake_fetch)
+
+    citations = crawler._fetch_citations_bulk(["a", "bad", "b"])
+
+    assert sorted(calls) == ["a", "b", "bad"]
+    assert citations == {"a": 3, "bad": 0, "b": 9}

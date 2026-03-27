@@ -249,7 +249,7 @@ class AIProcessor:
                         ),
                         user_content="\n".join(prompt_lines + ([retry_note] if retry_note else [])),
                         response_format={"type": "json_object"},
-                        max_tokens=max(120, 120 * len(batch)),
+                        max_tokens=max(1024, 256 * len(batch)),
                     )
                     parsed_batch = self._parse_title_localization_output(raw_output, batch)
                     break

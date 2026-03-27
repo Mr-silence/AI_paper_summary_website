@@ -278,17 +278,29 @@ class Pipeline:
             try:
                 self._ensure_localized_title(paper)
                 parsed_results, rejected_ids = self._run_ai_batch([paper], category)
-            except Exception:
+            except Exception as exc:
+                print(
+                    f"[pipeline][{category}] {arxiv_id} failed before reviewer acceptance: {exc}",
+                    flush=True,
+                )
                 rejected_blacklist.add(arxiv_id)
                 self._demote_summary(summary)
                 continue
 
             if arxiv_id in rejected_ids:
+                print(
+                    f"[pipeline][{category}] {arxiv_id} rejected by reviewer after retries.",
+                    flush=True,
+                )
                 rejected_blacklist.add(arxiv_id)
                 self._demote_summary(summary)
                 continue
 
             if not parsed_results:
+                print(
+                    f"[pipeline][{category}] {arxiv_id} returned no parsed summary payload.",
+                    flush=True,
+                )
                 rejected_blacklist.add(arxiv_id)
                 self._demote_summary(summary)
                 continue

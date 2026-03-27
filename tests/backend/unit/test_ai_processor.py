@@ -36,10 +36,15 @@ def test_localize_titles_falls_back_per_paper_when_llm_keeps_failing(monkeypatch
 
 
 def test_retry_backoff_seconds_scales_for_standard_and_longform_requests():
-    assert AIProcessor._retry_backoff_seconds(0, longform=False) == 5
-    assert AIProcessor._retry_backoff_seconds(2, longform=False) == 15
-    assert AIProcessor._retry_backoff_seconds(0, longform=True) == 15
-    assert AIProcessor._retry_backoff_seconds(4, longform=True) == 60
+    assert AIProcessor._retry_backoff_seconds(0, longform=False) == 15
+    assert AIProcessor._retry_backoff_seconds(2, longform=False) == 45
+    assert AIProcessor._retry_backoff_seconds(0, longform=True) == 60
+    assert AIProcessor._retry_backoff_seconds(4, longform=True) == 180
+
+
+def test_minimum_request_interval_seconds_distinguishes_longform():
+    assert AIProcessor._minimum_request_interval_seconds(longform=False) == 5
+    assert AIProcessor._minimum_request_interval_seconds(longform=True) == 20
 
 
 def test_split_markdown_blocks_enforces_zero_prefix():

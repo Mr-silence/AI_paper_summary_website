@@ -29,6 +29,7 @@ class AIProcessor:
     def __init__(self, api_key: str = settings.KIMI_API_KEY):
         self.api_key = api_key
         self._clients: Dict[int, OpenAI] = {}
+        self._next_request_at = 0.0
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
         prompts_dir = os.path.join(current_dir, "..", "..", "prompts")
@@ -74,6 +75,7 @@ class AIProcessor:
         last_error: Optional[Exception] = None
         for attempt in range(max(1, int(settings.KIMI_MAX_RETRIES or 1))):
             try:
+                self._respect_request_interval(longform)
                 completion = client.chat.completions.create(**payload)
                 content = (completion.choices[0].message.content or "").strip()
                 if not content:
@@ -114,9 +116,20 @@ class AIProcessor:
 
     @staticmethod
     def _retry_backoff_seconds(attempt: int, longform: bool) -> int:
-        base_seconds = 15 if longform else 5
-        max_seconds = 60 if longform else 20
+        base_seconds = 60 if longform else 15
+        max_seconds = 180 if longform else 60
         return min(base_seconds * (attempt + 1), max_seconds)
+
+    def _respect_request_interval(self, longform: bool) -> None:
+        interval_seconds = self._minimum_request_interval_seconds(longform)
+        now = time.monotonic()
+        if self._next_request_at > now:
+            time.sleep(self._next_request_at - now)
+        self._next_request_at = time.monotonic() + interval_seconds
+
+    @staticmethod
+    def _minimum_request_interval_seconds(longform: bool) -> int:
+        return 20 if longform else 5
 
     def run_editor(self, locked_papers: Sequence[Dict[str, Any]], category: str) -> str:
         input_text = [f"# Locked {category.title()} Batch", "", "系统已锁定以下论文，请逐篇生成定调：", ""]

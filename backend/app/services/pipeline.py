@@ -90,6 +90,10 @@ class Pipeline:
             if processed_count == 0:
                 raise ValueError(f"No papers passed AI processing for {issue_date.isoformat()}.")
 
+            refreshed_titles = self._refresh_selected_titles(issue_date)
+            if refreshed_titles:
+                print(f"[pipeline] refreshed localized titles: {refreshed_titles}", flush=True)
+
             task_log.fetched_count = fetched_count
             task_log.processed_count = processed_count
             task_log.status = "SUCCESS"
@@ -313,6 +317,45 @@ class Pipeline:
         configured_cap = max(1, int(settings.PIPELINE_MAX_CATEGORY_ATTEMPTS or 1))
         candidate_limit = max(target_count, target_count * multiplier)
         return min(queued_count, configured_cap, candidate_limit)
+
+    def _refresh_selected_titles(self, issue_date: date) -> int:
+        targeted_summaries = (
+            self.db.query(PaperSummary)
+            .join(Paper, Paper.id == PaperSummary.paper_id)
+            .filter(
+                PaperSummary.issue_date == issue_date,
+                PaperSummary.category.in_(("focus", "watching")),
+                Paper.title_zh.like("待翻译：%"),
+            )
+            .all()
+        )
+        if not targeted_summaries:
+            return 0
+
+        title_payload = [
+            {
+                "arxiv_id": summary.paper.arxiv_id,
+                "title_original": summary.paper.title_original,
+                "title_zh": summary.paper.title_zh,
+            }
+            for summary in targeted_summaries
+        ]
+        localized_titles = self.ai_processor.localize_titles(title_payload, batch_size=settings.KIMI_TITLE_BATCH_SIZE)
+        updated = 0
+        for summary in targeted_summaries:
+            paper = summary.paper
+            localized_title = str(localized_titles.get(paper.arxiv_id) or "").strip()
+            if (
+                localized_title
+                and not localized_title.startswith("待翻译：")
+                and localized_title.casefold() != paper.title_original.casefold()
+            ):
+                paper.title_zh = localized_title
+                updated += 1
+
+        if updated:
+            self.db.flush()
+        return updated
 
     def _ensure_localized_title(self, paper: Dict[str, Any]) -> None:
         localized_title = self.ai_processor.localize_title(paper)

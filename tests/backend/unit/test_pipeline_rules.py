@@ -318,6 +318,46 @@ def test_max_category_attempts_respects_target_multiplier_and_global_cap(monkeyp
     assert Pipeline._max_category_attempts("focus", target_count=8, queued_count=10) == 10
 
 
+def test_refresh_selected_titles_updates_focus_and_watching_fallbacks(db_session):
+    issue_date = Pipeline._resolve_issue_date("2026-03-27")
+    paper = Paper(
+        arxiv_id="2603.00001",
+        title_zh="待翻译：Agentic Planning for Production",
+        title_original="Agentic Planning for Production",
+        authors=[{"name": "Alice", "affiliation": "OpenAI"}],
+        venue="ICLR 2026",
+        abstract="demo",
+        pdf_url="https://arxiv.org/pdf/2603.00001.pdf",
+        upvotes=12,
+        arxiv_publish_date=Pipeline._resolve_issue_date("2026-03-24"),
+    )
+    db_session.add(paper)
+    db_session.flush()
+
+    summary = PaperSummary(
+        paper_id=paper.id,
+        issue_date=issue_date,
+        score=91,
+        score_reasons={},
+        category="focus",
+        candidate_reason=None,
+        direction="Agent",
+    )
+    db_session.add(summary)
+    db_session.commit()
+
+    pipeline = Pipeline(db_session)
+    pipeline.ai_processor.localize_titles = lambda papers, batch_size=None: {
+        papers[0]["arxiv_id"]: "面向生产的智能体规划"
+    }
+
+    updated = pipeline._refresh_selected_titles(issue_date)
+    db_session.refresh(paper)
+
+    assert updated == 1
+    assert paper.title_zh == "面向生产的智能体规划"
+
+
 def test_run_ai_batch_persists_editor_writer_and_reviewer_traces(db_session):
     paper = Paper(
         arxiv_id="2503.22001",

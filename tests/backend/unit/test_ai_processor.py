@@ -36,6 +36,37 @@ def test_localize_titles_falls_back_per_paper_when_llm_keeps_failing(monkeypatch
     assert localized["2503.00002"] == "Vision Model with 中文"
 
 
+def test_localize_titles_batches_requests(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    calls = []
+    outputs = iter(
+        [
+            '{"2503.10001":"面向生产的智能体规划","2503.10002":"多模态推理系统"}',
+            '{"2503.10003":"检索增强学习框架"}',
+        ]
+    )
+
+    def fake_call_llm(*, user_content, **kwargs):
+        calls.append(user_content)
+        return next(outputs)
+
+    monkeypatch.setattr(processor, "_call_llm", fake_call_llm)
+
+    localized = processor.localize_titles(
+        [
+            {"arxiv_id": "2503.10001", "title_original": "Agent Planning for Production"},
+            {"arxiv_id": "2503.10002", "title_original": "Multimodal Reasoning System"},
+            {"arxiv_id": "2503.10003", "title_original": "Retrieval Augmented Learning Framework"},
+        ],
+        batch_size=2,
+    )
+
+    assert len(calls) == 2
+    assert localized["2503.10001"] == "面向生产的智能体规划"
+    assert localized["2503.10002"] == "多模态推理系统"
+    assert localized["2503.10003"] == "检索增强学习框架"
+
+
 def test_retry_backoff_seconds_scales_for_standard_and_longform_requests():
     assert AIProcessor._retry_backoff_seconds(0, longform=False) == 12
     assert AIProcessor._retry_backoff_seconds(2, longform=False) == 36

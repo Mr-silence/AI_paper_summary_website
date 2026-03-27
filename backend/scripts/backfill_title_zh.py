@@ -17,7 +17,12 @@ def main(batch_size: int = 20) -> None:
     try:
         papers = (
             db.query(Paper)
-            .filter((Paper.title_zh.is_(None)) | (Paper.title_zh == "") | (Paper.title_zh == Paper.title_original))
+            .filter(
+                (Paper.title_zh.is_(None))
+                | (Paper.title_zh == "")
+                | (Paper.title_zh == Paper.title_original)
+                | (Paper.title_zh.like("待翻译：%"))
+            )
             .order_by(Paper.id.asc())
             .all()
         )

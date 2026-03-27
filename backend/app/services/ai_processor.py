@@ -202,6 +202,7 @@ class AIProcessor:
 
     def localize_titles(self, papers: Sequence[Dict[str, Any]], batch_size: Optional[int] = None) -> Dict[str, str]:
         localized_titles: Dict[str, str] = {}
+        pending: List[Dict[str, Any]] = []
         for paper in papers:
             arxiv_id = paper["arxiv_id"]
             current_title = str(paper.get("title_zh") or "").strip()
@@ -209,18 +210,28 @@ class AIProcessor:
 
             if current_title and self.CJK_PATTERN.search(current_title) and current_title.casefold() != original_title.casefold():
                 localized_titles[arxiv_id] = current_title
-                continue
+            else:
+                pending.append(paper)
 
+        if not pending:
+            return localized_titles
+
+        effective_batch_size = max(1, int(batch_size or settings.KIMI_TITLE_BATCH_SIZE or 1))
+        for start in range(0, len(pending), effective_batch_size):
+            batch = list(pending[start:start + effective_batch_size])
             prompt_lines = [
                 "请把以下英文论文标题翻译成简洁、自然、面向中文技术读者的中文标题。",
                 "保留模型名、数据集名、框架名、缩写和关键专有名词，不要添加编号或解释。",
                 "每个中文标题都必须至少包含一个中文汉字，不能直接返回英文原题。",
                 "只返回 JSON 对象，key 是 arxiv_id，value 是中文标题。",
                 "",
-                f"- {arxiv_id}: {original_title}",
             ]
+            prompt_lines.extend(
+                f"- {paper['arxiv_id']}: {str(paper['title_original'] or '').strip()}"
+                for paper in batch
+            )
 
-            localized_title = None
+            parsed_batch: Optional[Dict[str, str]] = None
             retry_note = ""
             for attempt in range(3):
                 try:
@@ -232,13 +243,13 @@ class AIProcessor:
                         ),
                         user_content="\n".join(prompt_lines + ([retry_note] if retry_note else [])),
                         response_format={"type": "json_object"},
-                        max_tokens=120,
+                        max_tokens=max(120, 120 * len(batch)),
                     )
-                    localized_title = self._parse_title_localization_output(raw_output, [paper])[arxiv_id]
+                    parsed_batch = self._parse_title_localization_output(raw_output, batch)
                     break
                 except Exception as exc:
                     if attempt >= 2:
-                        localized_title = self.build_fallback_title(original_title)
+                        parsed_batch = None
                         break
                     retry_note = (
                         "上一次输出没有通过校验。"
@@ -246,7 +257,13 @@ class AIProcessor:
                         "请重新返回 JSON，并确保标题是真正的中文本地化标题。"
                     )
 
-            localized_titles[arxiv_id] = localized_title or self.build_fallback_title(original_title)
+            for paper in batch:
+                arxiv_id = paper["arxiv_id"]
+                original_title = str(paper["title_original"] or "").strip()
+                if parsed_batch and arxiv_id in parsed_batch:
+                    localized_titles[arxiv_id] = parsed_batch[arxiv_id]
+                else:
+                    localized_titles[arxiv_id] = self.build_fallback_title(original_title)
 
         return localized_titles
 

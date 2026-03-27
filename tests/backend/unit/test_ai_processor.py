@@ -271,6 +271,75 @@ def test_run_reviewer_uses_large_longform_token_budget(monkeypatch):
     assert captured["kwargs"]["max_tokens"] >= 2048
 
 
+def test_repair_editor_output_returns_valid_contract(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    monkeypatch.setattr(
+        processor,
+        "_call_llm",
+        lambda *args, **kwargs: (
+            "## 论文: [2503.00001]\n"
+            "- **写作角度**: demo\n"
+            "- **核心痛点**: demo\n"
+            "- **具体解法**: demo\n"
+        ),
+    )
+    repaired = processor.repair_editor_output(
+        "bad editor output",
+        [{"arxiv_id": "2503.00001"}],
+        "focus",
+    )
+    assert "## 论文: [2503.00001]" in repaired
+
+
+def test_repair_writer_output_returns_valid_contract(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    monkeypatch.setattr(
+        processor,
+        "_call_llm",
+        lambda *args, **kwargs: (
+            "## [2503.00001]\n"
+            "- **一句话总结**: 中文总结\n"
+            "- **One-line Summary**: English summary\n"
+            "- **核心亮点**:\n"
+            "- 亮点一\n- 亮点二\n- 亮点三\n"
+            "- **Core Highlights**:\n"
+            "- Point 1\n- Point 2\n- Point 3\n"
+            "- **应用场景**: 中文场景\n"
+            "- **Application Scenarios**: English scenario\n"
+        ),
+    )
+    repaired = processor.repair_writer_output(
+        "bad writer output",
+        [{"arxiv_id": "2503.00001"}],
+        "focus",
+    )
+    assert "## [2503.00001]" in repaired
+
+
+def test_repair_reviewer_output_returns_valid_contract(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    monkeypatch.setattr(
+        processor,
+        "_call_llm",
+        lambda *args, **kwargs: "- **整体结论**: PASSED\n- **拒绝名单**: []",
+    )
+    result = processor.repair_reviewer_output(
+        "bad reviewer output",
+        (
+            "## [2503.00001]\n"
+            "- **一句话总结**: 中文总结\n"
+            "- **One-line Summary**: English summary\n"
+            "- **核心亮点**:\n"
+            "- 亮点一\n- 亮点二\n- 亮点三\n"
+            "- **Core Highlights**:\n"
+            "- Point 1\n- Point 2\n- Point 3\n"
+            "- **应用场景**: 中文场景\n"
+            "- **Application Scenarios**: English scenario\n"
+        ),
+    )
+    assert result["status"] == "PASSED"
+
+
 def test_parse_writer_records_returns_trace_content_and_summary_fields():
     processor = AIProcessor(api_key="test-key")
     writer_output = (

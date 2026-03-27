@@ -281,38 +281,95 @@ class AIProcessor:
             max_tokens=2048,
         ).strip()
         try:
-            normalized_output = self._strip_structured_output_wrappers(
-                output,
-                self.REVIEWER_ANCHOR_PATTERN,
-                allow_preface=True,
-            )
-
-            full_match = re.fullmatch(
-                r"- \*\*整体结论\*\*: (PASSED|REJECTED)\n- \*\*拒绝名单\*\*: \[(.*?)\]\s*",
-                normalized_output,
-            )
-            if not full_match:
-                raise ValueError("Reviewer output does not match the strict two-line contract.")
-
-            status = full_match.group(1)
-            rejected_ids = [item.strip() for item in full_match.group(2).split(",") if item.strip()]
-            writer_ids = {
-                arxiv_id
-                for arxiv_id, _ in self._split_markdown_blocks(writer_output, self.WRITER_BLOCK_PATTERN, "Writer")
-            }
-
-            if status == "PASSED" and rejected_ids:
-                raise ValueError("Reviewer returned PASSED with a non-empty rejection list.")
-            if status == "REJECTED":
-                if not rejected_ids:
-                    raise ValueError("Reviewer returned REJECTED with an empty rejection list.")
-                invalid_ids = set(rejected_ids) - writer_ids
-                if invalid_ids:
-                    raise ValueError(f"Reviewer returned invalid rejection IDs: {sorted(invalid_ids)}")
-
-            return {"status": status, "rejected_ids": rejected_ids, "raw_output": normalized_output}
+            return self._parse_reviewer_result(output, writer_output)
         except Exception as exc:
             raise StructuredOutputError(str(exc), raw_output=output) from exc
+
+    def repair_editor_output(
+        self,
+        raw_output: str,
+        papers: Sequence[Dict[str, Any]],
+        category: str,
+    ) -> str:
+        expected_ids = ", ".join(paper["arxiv_id"] for paper in papers)
+        repaired = self._call_llm(
+            system_prompt=(
+                "You normalize malformed Editor markdown into a strict contract. "
+                "Do not add or remove papers. Preserve facts from the original output."
+            ),
+            user_content=(
+                f"批次类型: {category}\n"
+                f"必须覆盖且仅覆盖这些 arxiv_id: [{expected_ids}]\n\n"
+                "请把下面的原始输出修复成严格格式：\n"
+                "## 论文: [arxiv_id]\n"
+                "- **写作角度**: ...\n"
+                "- **核心痛点**: ...\n"
+                "- **具体解法**: ...\n\n"
+                "原始输出如下：\n"
+                f"{raw_output}"
+            ),
+            temperature=0.0,
+            max_tokens=max(1200, 500 * len(papers)),
+        )
+        self.parse_editor_records(repaired, papers)
+        return repaired
+
+    def repair_writer_output(
+        self,
+        raw_output: str,
+        papers_metadata: Sequence[Dict[str, Any]],
+        category: str,
+    ) -> str:
+        expected_ids = ", ".join(paper["arxiv_id"] for paper in papers_metadata)
+        highlights_rule = "3-5" if category == "focus" else "1-2"
+        repaired = self._call_llm(
+            system_prompt=(
+                "You normalize malformed Writer markdown into a strict bilingual contract. "
+                "Do not add or remove papers. Preserve original meaning."
+            ),
+            user_content=(
+                f"批次类型: {category}\n"
+                f"必须覆盖且仅覆盖这些 arxiv_id: [{expected_ids}]\n"
+                f"每篇中英文亮点条数必须一致，且每篇亮点条数必须是 {highlights_rule} 条。\n\n"
+                "严格输出结构：\n"
+                "## [arxiv_id]\n"
+                "- **一句话总结**: ...\n"
+                "- **One-line Summary**: ...\n"
+                "- **核心亮点**:\n"
+                "- ...\n"
+                "- **Core Highlights**:\n"
+                "- ...\n"
+                "- **应用场景**: ...\n"
+                "- **Application Scenarios**: ...\n\n"
+                "原始输出如下：\n"
+                f"{raw_output}"
+            ),
+            temperature=0.0,
+            max_tokens=max(1800, 800 * len(papers_metadata)),
+        )
+        self.parse_writer_records(repaired, papers_metadata, category)
+        return repaired
+
+    def repair_reviewer_output(self, raw_output: str, writer_output: str) -> Dict[str, Any]:
+        writer_ids = ", ".join(arxiv_id for arxiv_id, _ in self._split_markdown_blocks(writer_output, self.WRITER_BLOCK_PATTERN, "Writer"))
+        repaired = self._call_llm(
+            system_prompt=(
+                "You normalize malformed Reviewer markdown into the strict two-line contract. "
+                "Use only IDs that exist in the writer batch."
+            ),
+            user_content=(
+                f"Writer 批次的合法 arxiv_id: [{writer_ids}]\n\n"
+                "严格输出两行：\n"
+                "- **整体结论**: PASSED|REJECTED\n"
+                "- **拒绝名单**: [id1, id2]\n"
+                "如果是 PASSED，拒绝名单必须是 []。\n\n"
+                "原始输出如下：\n"
+                f"{raw_output}"
+            ),
+            temperature=0.0,
+            max_tokens=400,
+        )
+        return self._parse_reviewer_result(repaired, writer_output)
 
     def parse_final_summaries(
         self,
@@ -334,6 +391,38 @@ class AIProcessor:
             for record in self.parse_writer_records(writer_output, None, category)
             if record["arxiv_id"] not in rejected_set
         ]
+
+    def _parse_reviewer_result(self, output: str, writer_output: str) -> Dict[str, Any]:
+        normalized_output = self._strip_structured_output_wrappers(
+            output,
+            self.REVIEWER_ANCHOR_PATTERN,
+            allow_preface=True,
+        )
+
+        full_match = re.fullmatch(
+            r"- \*\*整体结论\*\*: (PASSED|REJECTED)\n- \*\*拒绝名单\*\*: \[(.*?)\]\s*",
+            normalized_output,
+        )
+        if not full_match:
+            raise ValueError("Reviewer output does not match the strict two-line contract.")
+
+        status = full_match.group(1)
+        rejected_ids = [item.strip() for item in full_match.group(2).split(",") if item.strip()]
+        writer_ids = {
+            arxiv_id
+            for arxiv_id, _ in self._split_markdown_blocks(writer_output, self.WRITER_BLOCK_PATTERN, "Writer")
+        }
+
+        if status == "PASSED" and rejected_ids:
+            raise ValueError("Reviewer returned PASSED with a non-empty rejection list.")
+        if status == "REJECTED":
+            if not rejected_ids:
+                raise ValueError("Reviewer returned REJECTED with an empty rejection list.")
+            invalid_ids = set(rejected_ids) - writer_ids
+            if invalid_ids:
+                raise ValueError(f"Reviewer returned invalid rejection IDs: {sorted(invalid_ids)}")
+
+        return {"status": status, "rejected_ids": rejected_ids, "raw_output": normalized_output}
 
     def parse_editor_records(
         self,

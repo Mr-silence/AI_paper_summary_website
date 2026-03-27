@@ -421,6 +421,15 @@ def test_run_ai_batch_persists_invalid_attempt_traces(db_session):
         }
     ]
     pipeline.ai_processor.run_reviewer = fake_run_reviewer
+    pipeline.ai_processor.repair_editor_output = (
+        lambda raw_output, papers, category: (_ for _ in ()).throw(ValueError("repair failed"))
+    )
+    pipeline.ai_processor.repair_writer_output = (
+        lambda raw_output, papers_metadata, category: (_ for _ in ()).throw(ValueError("repair failed"))
+    )
+    pipeline.ai_processor.repair_reviewer_output = (
+        lambda raw_output, writer_output: (_ for _ in ()).throw(ValueError("repair failed"))
+    )
 
     results, rejected_ids = pipeline._run_ai_batch(
         [{"arxiv_id": "2503.22002", "_summary": summary}],

@@ -311,6 +311,13 @@ class Pipeline:
                     attempt_no=attempt + 1,
                     content=exc.raw_output,
                 )
+                try:
+                    editor_brief = self.ai_processor.repair_editor_output(exc.raw_output, papers, category)
+                    editor_records = self.ai_processor.parse_editor_records(editor_brief, papers)
+                    self._record_editor_traces(papers, editor_records, attempt_no=attempt + 1)
+                    break
+                except Exception:
+                    pass
                 if attempt >= max_retries:
                     raise
             except Exception:
@@ -350,15 +357,20 @@ class Pipeline:
                     attempt_no=attempt + 1,
                     content=exc.raw_output,
                 )
-                if attempt >= max_retries:
-                    raise
-                writer_history.append(
-                    {
-                        "role": "user",
-                        "content": f"The previous output failed validation: {exc}. Regenerate the FULL batch strictly.",
-                    }
-                )
-                continue
+                try:
+                    writer_output = self.ai_processor.repair_writer_output(exc.raw_output, papers, category)
+                    writer_records = self.ai_processor.parse_writer_records(writer_output, papers, category)
+                    self._record_writer_traces(papers, writer_records, attempt_no=attempt + 1)
+                except Exception:
+                    if attempt >= max_retries:
+                        raise
+                    writer_history.append(
+                        {
+                            "role": "user",
+                            "content": f"The previous output failed validation: {exc}. Regenerate the FULL batch strictly.",
+                        }
+                    )
+                    continue
             except Exception as exc:
                 if writer_output:
                     self._record_uniform_stage_traces(
@@ -429,14 +441,58 @@ class Pipeline:
                     attempt_no=attempt + 1,
                     content=exc.raw_output,
                 )
-                if attempt >= max_retries:
-                    raise
-                writer_history.append(
-                    {
-                        "role": "user",
-                        "content": f"The previous output failed validation: {exc}. Regenerate the FULL batch strictly.",
-                    }
-                )
+                try:
+                    review_result = self.ai_processor.repair_reviewer_output(exc.raw_output, writer_output)
+                    rejected_ids = review_result["rejected_ids"] if review_result["status"] == "REJECTED" else []
+                    self._record_reviewer_traces(
+                        papers,
+                        review_output=review_result["raw_output"],
+                        rejected_ids=rejected_ids,
+                        attempt_no=attempt + 1,
+                    )
+                    parsed_results = [
+                        {
+                            "arxiv_id": record["arxiv_id"],
+                            "one_line_summary": record["one_line_summary"],
+                            "one_line_summary_en": record["one_line_summary_en"],
+                            "core_highlights": record["core_highlights"],
+                            "core_highlights_en": record["core_highlights_en"],
+                            "application_scenarios": record["application_scenarios"],
+                            "application_scenarios_en": record["application_scenarios_en"],
+                        }
+                        for record in writer_records
+                        if record["arxiv_id"] not in set(rejected_ids)
+                    ]
+                    if review_result["status"] == "PASSED":
+                        return parsed_results, []
+
+                    last_rejected_ids = rejected_ids
+                    if attempt >= max_retries:
+                        return parsed_results, rejected_ids
+
+                    writer_history.extend(
+                        [
+                            {"role": "assistant", "content": writer_output},
+                            {
+                                "role": "user",
+                                "content": (
+                                    "The reviewer rejected part of the batch. "
+                                    f"Rejected IDs: {', '.join(rejected_ids)}. "
+                                    "Regenerate the FULL batch in the exact same format and fix the weak items."
+                                ),
+                            },
+                        ]
+                    )
+                    continue
+                except Exception:
+                    if attempt >= max_retries:
+                        raise
+                    writer_history.append(
+                        {
+                            "role": "user",
+                            "content": f"The previous output failed validation: {exc}. Regenerate the FULL batch strictly.",
+                        }
+                    )
             except Exception as exc:
                 if attempt >= max_retries:
                     raise

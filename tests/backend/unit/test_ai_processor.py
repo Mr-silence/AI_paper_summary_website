@@ -67,6 +67,30 @@ def test_localize_titles_batches_requests(monkeypatch):
     assert localized["2503.10003"] == "检索增强学习框架"
 
 
+def test_localize_titles_retries_when_current_title_is_fallback_prefix(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    calls = {"count": 0}
+
+    def fake_call_llm(**kwargs):
+        calls["count"] += 1
+        return '{"2503.20001":"面向生产环境的智能体规划"}'
+
+    monkeypatch.setattr(processor, "_call_llm", fake_call_llm)
+
+    localized = processor.localize_titles(
+        [
+            {
+                "arxiv_id": "2503.20001",
+                "title_original": "Agentic Planning in Production",
+                "title_zh": "待翻译：Agentic Planning in Production",
+            }
+        ]
+    )
+
+    assert calls["count"] == 1
+    assert localized["2503.20001"] == "面向生产环境的智能体规划"
+
+
 def test_retry_backoff_seconds_scales_for_standard_and_longform_requests():
     assert AIProcessor._retry_backoff_seconds(0, longform=False) == 12
     assert AIProcessor._retry_backoff_seconds(2, longform=False) == 36

@@ -208,7 +208,13 @@ class AIProcessor:
             current_title = str(paper.get("title_zh") or "").strip()
             original_title = str(paper["title_original"] or "").strip()
 
-            if current_title and self.CJK_PATTERN.search(current_title) and current_title.casefold() != original_title.casefold():
+            has_fallback_prefix = current_title.startswith("待翻译")
+            if (
+                current_title
+                and not has_fallback_prefix
+                and self.CJK_PATTERN.search(current_title)
+                and current_title.casefold() != original_title.casefold()
+            ):
                 localized_titles[arxiv_id] = current_title
             else:
                 pending.append(paper)

@@ -389,7 +389,7 @@ def test_call_llm_retries_empty_content(monkeypatch):
     assert calls["count"] == 2
 
 
-def test_call_llm_uses_streaming_for_longform(monkeypatch):
+def test_call_llm_uses_non_streaming_for_longform(monkeypatch):
     processor = AIProcessor(api_key="test-key")
 
     class FakeClient:
@@ -397,11 +397,10 @@ def test_call_llm_uses_streaming_for_longform(monkeypatch):
             class completions:
                 @staticmethod
                 def create(**kwargs):
-                    assert kwargs["stream"] is True
-                    return [
-                        SimpleNamespace(choices=[SimpleNamespace(delta=SimpleNamespace(content="hello "))]),
-                        SimpleNamespace(choices=[SimpleNamespace(delta=SimpleNamespace(content="world"))]),
-                    ]
+                    assert "stream" not in kwargs
+                    return SimpleNamespace(
+                        choices=[SimpleNamespace(message=SimpleNamespace(content="hello world"))]
+                    )
 
     monkeypatch.setattr(processor, "_get_client", lambda timeout_seconds: FakeClient())
     monkeypatch.setattr(processor, "_respect_request_interval", lambda longform: None)

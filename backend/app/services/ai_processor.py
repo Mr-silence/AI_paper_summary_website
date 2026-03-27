@@ -127,7 +127,9 @@ class AIProcessor:
 
     @staticmethod
     def _should_stream(longform: bool, response_format: Optional[Dict[str, str]]) -> bool:
-        return longform and response_format is None
+        # Kimi longform streaming can hang in production network conditions.
+        # Keep non-streaming as the default stable path.
+        return False
 
     @staticmethod
     def _retry_backoff_seconds(attempt: int, longform: bool) -> int:

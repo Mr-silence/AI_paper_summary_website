@@ -223,6 +223,7 @@ class AIProcessor:
             return localized_titles
 
         effective_batch_size = max(1, int(batch_size or settings.KIMI_TITLE_BATCH_SIZE or 1))
+        max_localize_attempts = max(1, int(settings.KIMI_TITLE_LOCALIZATION_ATTEMPTS or 1))
         for start in range(0, len(pending), effective_batch_size):
             batch = list(pending[start:start + effective_batch_size])
             prompt_lines = [
@@ -239,7 +240,7 @@ class AIProcessor:
 
             parsed_batch: Optional[Dict[str, str]] = None
             retry_note = ""
-            for attempt in range(3):
+            for attempt in range(max_localize_attempts):
                 try:
                     raw_output = self._call_llm(
                         system_prompt=(
@@ -254,7 +255,7 @@ class AIProcessor:
                     parsed_batch = self._parse_title_localization_output(raw_output, batch)
                     break
                 except Exception as exc:
-                    if attempt >= 2:
+                    if attempt >= max_localize_attempts - 1:
                         parsed_batch = None
                         break
                     retry_note = (

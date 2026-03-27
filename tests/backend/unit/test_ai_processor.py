@@ -2,6 +2,7 @@ import pytest
 from types import SimpleNamespace
 
 from app.services.ai_processor import AIProcessor
+from app.core.config import settings
 
 
 def test_parse_title_localization_output_requires_chinese_and_different_title():
@@ -89,6 +90,27 @@ def test_localize_titles_retries_when_current_title_is_fallback_prefix(monkeypat
 
     assert calls["count"] == 1
     assert localized["2503.20001"] == "面向生产环境的智能体规划"
+
+
+def test_localize_titles_honors_configured_attempts(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    calls = {"count": 0}
+
+    monkeypatch.setattr(settings, "KIMI_TITLE_LOCALIZATION_ATTEMPTS", 1)
+
+    def always_fail(**kwargs):
+        calls["count"] += 1
+        raise RuntimeError("temporary failure")
+
+    monkeypatch.setattr(processor, "_call_llm", always_fail)
+
+    localized = processor.localize_titles(
+        [{"arxiv_id": "2503.30001", "title_original": "Agentic Evaluation Benchmark"}],
+        batch_size=1,
+    )
+
+    assert calls["count"] == 1
+    assert localized["2503.30001"].startswith("待翻译：")
 
 
 def test_retry_backoff_seconds_scales_for_standard_and_longform_requests():

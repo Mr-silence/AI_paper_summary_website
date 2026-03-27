@@ -124,11 +124,18 @@ sudo cp /srv/ai-paper-summary/deploy/linux/ai-paper-summary.nginx.conf /etc/ngin
 sudo ln -sf /etc/nginx/sites-available/ai-paper-summary /etc/nginx/sites-enabled/ai-paper-summary
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo systemctl daemon-reload
+sudo systemctl enable mysql
 sudo systemctl enable ai-paper-summary-backend
+sudo systemctl enable nginx
 sudo systemctl restart ai-paper-summary-backend
 sudo nginx -t
 sudo systemctl restart nginx
 ```
+
+Notes:
+
+- `requirements.txt` includes `cryptography`, because Ubuntu MySQL commonly defaults to `caching_sha2_password`, and `PyMySQL` needs that package to authenticate successfully.
+- The three services that must survive reboot are `mysql`, `ai-paper-summary-backend`, and `nginx`.
 
 ## 7. Install cron jobs
 

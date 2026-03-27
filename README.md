@@ -419,6 +419,12 @@ OWNER_ALERT_EMAIL=z1332556430@gmail.com
 
 更完整的命令清单见 [deploy/linux/DEPLOY.md](/Users/zhangshijie/Desktop/Project/AI_paper_summary_website/deploy/linux/DEPLOY.md)。
 
+生产部署补充说明：
+
+- `backend/requirements.txt` 现在显式包含 `cryptography`，用于兼容 Ubuntu MySQL 默认的 `caching_sha2_password` 认证方式
+- 服务器侧应确保 `mysql`、`ai-paper-summary-backend`、`nginx` 三个服务都通过 `systemctl enable` 设置为开机自启
+- `cron` 任务安装在 `ubuntu` 用户 crontab 中，系统重启后会继续生效，无需手动重装
+
 ## 9. 运行脚本
 
 ### 9.1 Linux 定时更新脚本

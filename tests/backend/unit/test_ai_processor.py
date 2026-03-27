@@ -73,6 +73,15 @@ def test_split_markdown_blocks_supports_bracketless_editor_headers():
     assert records[0][0] == "2503.00001"
 
 
+def test_split_markdown_blocks_normalizes_prefixed_editor_headers():
+    records = AIProcessor._split_markdown_blocks(
+        "## 论文: [arxiv_id=2602.07274]\n- **写作角度**: demo\n- **核心痛点**: demo\n- **具体解法**: demo\n",
+        AIProcessor.EDITOR_BLOCK_PATTERN,
+        "Editor",
+    )
+    assert records[0][0] == "2602.07274"
+
+
 def test_parse_editor_records_returns_structured_trace_blocks():
     processor = AIProcessor(api_key="test-key")
     editor_output = (
@@ -89,6 +98,45 @@ def test_parse_editor_records_returns_structured_trace_blocks():
 
     assert records[0]["writing_angle"] == "从生产落地角度切入。"
     assert records[0]["content"].startswith("## 论文: [2503.00001]")
+
+
+def test_run_writer_accepts_prefixed_editor_headers(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    editor_brief = (
+        "## 论文: [arxiv_id=2503.00001]\n"
+        "- **写作角度**: demo\n"
+        "- **核心痛点**: demo\n"
+        "- **具体解法**: demo\n"
+    )
+    papers_metadata = [
+        {
+            "arxiv_id": "2503.00001",
+            "title_zh": "中文标题",
+            "title_original": "Original Title",
+            "direction": "Agent",
+            "venue": "ICLR 2026",
+            "abstract": "demo abstract",
+        }
+    ]
+
+    monkeypatch.setattr(
+        processor,
+        "_call_llm",
+        lambda system_prompt, user_content, history=None, **kwargs: (
+            "## [2503.00001]\n"
+            "- **一句话总结**: 中文总结\n"
+            "- **One-line Summary**: English summary\n"
+            "- **核心亮点**:\n"
+            "- 亮点一\n- 亮点二\n- 亮点三\n"
+            "- **Core Highlights**:\n"
+            "- Point 1\n- Point 2\n- Point 3\n"
+            "- **应用场景**: 中文场景\n"
+            "- **Application Scenarios**: English scenario\n"
+        ),
+    )
+
+    output = processor.run_writer(editor_brief, papers_metadata, "focus")
+    assert "## [2503.00001]" in output
 
 
 def test_run_writer_accepts_bracketless_editor_headers(monkeypatch):

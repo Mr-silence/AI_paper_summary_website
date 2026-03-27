@@ -425,7 +425,10 @@ class AIProcessor:
         if (len(blocks) - 1) % 2 != 0:
             raise ValueError(f"{stage_name} output produced malformed block pairs.")
 
-        return [(blocks[index].strip(), blocks[index + 1]) for index in range(1, len(blocks), 2)]
+        return [
+            (AIProcessor._normalize_record_id(blocks[index]), blocks[index + 1])
+            for index in range(1, len(blocks), 2)
+        ]
 
     @staticmethod
     def _strip_structured_output_wrappers(raw_output: str, anchor_pattern: str, allow_preface: bool = False) -> str:
@@ -464,6 +467,16 @@ class AIProcessor:
     @staticmethod
     def _extract_markdown_bullets(block: str) -> List[str]:
         return [item.strip() for item in re.findall(r"^\s*-\s+(.*?)\s*$", block, re.M) if item.strip()]
+
+    @staticmethod
+    def _normalize_record_id(raw_id: str) -> str:
+        normalized = str(raw_id or "").strip()
+        normalized = normalized.strip("[]")
+        normalized = re.sub(r"^(?:arxiv_id|paper_id|id)\s*=\s*", "", normalized, flags=re.I)
+        normalized = normalized.strip()
+        if not normalized:
+            raise ValueError("Structured output block contains an empty paper ID.")
+        return normalized
 
     @staticmethod
     def _truncate_abstract(abstract: str, limit: int = 1600) -> str:

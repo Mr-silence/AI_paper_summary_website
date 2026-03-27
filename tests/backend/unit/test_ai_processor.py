@@ -1,4 +1,5 @@
 import pytest
+from types import SimpleNamespace
 
 from app.services.ai_processor import AIProcessor
 
@@ -62,6 +63,18 @@ def test_strip_structured_output_wrappers_removes_code_fence_and_preface():
         r"## \[",
     )
     assert normalized.startswith("## [2503.00001]")
+
+
+def test_extract_message_content_supports_segment_lists():
+    message = SimpleNamespace(
+        content=[
+            SimpleNamespace(type="text", text="第一段"),
+            SimpleNamespace(type="input_image", text=None),
+            {"type": "text", "text": "第二段"},
+        ]
+    )
+
+    assert AIProcessor._extract_message_content(message) == "第一段\n第二段"
 
 
 def test_split_markdown_blocks_supports_bracketless_editor_headers():
@@ -268,3 +281,29 @@ def test_parse_final_summaries_validates_highlight_symmetry():
 
     with pytest.raises(ValueError, match="asymmetric"):
         AIProcessor(api_key="test-key").parse_final_summaries(writer_output, [], "focus")
+
+
+def test_call_llm_retries_empty_content(monkeypatch):
+    processor = AIProcessor(api_key="test-key")
+    calls = {"count": 0}
+
+    class FakeClient:
+        class chat:
+            class completions:
+                @staticmethod
+                def create(**kwargs):
+                    calls["count"] += 1
+                    if calls["count"] == 1:
+                        return SimpleNamespace(
+                            choices=[SimpleNamespace(message=SimpleNamespace(content=""))]
+                        )
+                    return SimpleNamespace(
+                        choices=[SimpleNamespace(message=SimpleNamespace(content="ok"))]
+                    )
+
+    monkeypatch.setattr(processor, "_get_client", lambda timeout_seconds: FakeClient())
+    monkeypatch.setattr(processor, "_respect_request_interval", lambda longform: None)
+    monkeypatch.setattr(processor, "_retry_backoff_seconds", lambda attempt, longform: 0)
+
+    assert processor._call_llm("system", "user") == "ok"
+    assert calls["count"] == 2

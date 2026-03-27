@@ -2,6 +2,7 @@ import json
 import os
 import re
 import time
+from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from openai import APIConnectionError, APIError, APITimeoutError, AuthenticationError, OpenAI, PermissionDeniedError, RateLimitError
@@ -80,9 +81,13 @@ class AIProcessor:
             try:
                 self._respect_request_interval(longform)
                 completion = client.chat.completions.create(**payload)
-                content = (completion.choices[0].message.content or "").strip()
+                content = self._extract_message_content(completion.choices[0].message)
                 if not content:
-                    raise ValueError("Kimi returned empty content.")
+                    last_error = ValueError("Kimi returned empty content.")
+                    if attempt >= settings.KIMI_MAX_RETRIES - 1:
+                        raise RuntimeError("Kimi returned empty content after retries.") from last_error
+                    time.sleep(self._retry_backoff_seconds(attempt, longform))
+                    continue
                 return content
             except (AuthenticationError, PermissionDeniedError) as exc:
                 raise RuntimeError("Kimi authentication failed. Check KIMI_API_KEY permissions and validity.") from exc
@@ -467,6 +472,28 @@ class AIProcessor:
     @staticmethod
     def _extract_markdown_bullets(block: str) -> List[str]:
         return [item.strip() for item in re.findall(r"^\s*-\s+(.*?)\s*$", block, re.M) if item.strip()]
+
+    @staticmethod
+    def _extract_message_content(message: Any) -> str:
+        content = getattr(message, "content", None)
+        if isinstance(content, str):
+            return content.strip()
+        if isinstance(content, list):
+            parts: List[str] = []
+            for item in content:
+                if isinstance(item, dict):
+                    if item.get("type") == "text" and item.get("text"):
+                        parts.append(str(item["text"]).strip())
+                else:
+                    item_type = getattr(item, "type", None)
+                    item_text = getattr(item, "text", None)
+                    if item_type == "text" and item_text:
+                        parts.append(str(item_text).strip())
+            return "\n".join(part for part in parts if part).strip()
+        if isinstance(content, SimpleNamespace):
+            text = getattr(content, "text", None)
+            return str(text).strip() if text else ""
+        return ""
 
     @staticmethod
     def _normalize_record_id(raw_id: str) -> str:

@@ -361,6 +361,56 @@ def test_run_ai_batch_accepts_reviewer_rejections_in_non_strict_mode(monkeypatch
     assert parsed_results[0]["one_line_summary"] == "中文总结"
 
 
+def test_run_ai_batch_accepts_reviewer_invalid_output_in_non_strict_mode(monkeypatch):
+    paper = {
+        "arxiv_id": "focus-2",
+        "_summary": SimpleNamespace(id=2),
+    }
+    writer_record = {
+        "arxiv_id": "focus-2",
+        "content": "writer content",
+        "one_line_summary": "中文总结",
+        "one_line_summary_en": "English summary",
+        "core_highlights": ["亮点1", "亮点2", "亮点3"],
+        "core_highlights_en": ["Point1", "Point2", "Point3"],
+        "application_scenarios": "中文场景",
+        "application_scenarios_en": "English scenario",
+    }
+
+    pipeline = Pipeline.__new__(Pipeline)
+    pipeline.db = SimpleNamespace(add=lambda *_args, **_kwargs: None, flush=lambda: None)
+    pipeline._record_editor_traces = lambda *args, **kwargs: None
+    pipeline._record_uniform_stage_traces = lambda *args, **kwargs: None
+    pipeline._record_writer_traces = lambda *args, **kwargs: None
+    pipeline._record_reviewer_traces = lambda *args, **kwargs: None
+
+    pipeline.ai_processor = SimpleNamespace(
+        run_editor=lambda papers, category: "editor-output",
+        parse_editor_records=lambda editor_output, papers: [
+            {
+                "arxiv_id": "focus-2",
+                "writing_angle": "angle",
+                "core_problem": "problem",
+                "solution": "solution",
+                "content": "editor-content",
+            }
+        ],
+        run_writer=lambda **kwargs: "writer-output",
+        parse_writer_records=lambda writer_output, papers, category: [writer_record],
+        run_reviewer=lambda writer_output: (_ for _ in ()).throw(
+            StructuredOutputError("bad reviewer", "garbled reviewer output")
+        ),
+    )
+
+    monkeypatch.setattr(settings, "PIPELINE_REVIEWER_STRICT", False)
+
+    parsed_results, rejected_ids = pipeline._run_ai_batch([paper], "focus")
+
+    assert rejected_ids == []
+    assert len(parsed_results) == 1
+    assert parsed_results[0]["arxiv_id"] == "focus-2"
+
+
 def test_max_category_attempts_respects_target_multiplier_and_global_cap(monkeypatch):
     monkeypatch.setattr(settings, "PIPELINE_MAX_CATEGORY_ATTEMPTS", 25)
     monkeypatch.setattr(settings, "PIPELINE_FOCUS_ATTEMPT_MULTIPLIER", 4)

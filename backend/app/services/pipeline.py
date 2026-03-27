@@ -556,6 +556,26 @@ class Pipeline:
                     attempt_no=attempt + 1,
                     content=exc.raw_output,
                 )
+                if not settings.PIPELINE_REVIEWER_STRICT:
+                    print(
+                        (
+                            f"[pipeline][{category}] reviewer output invalid ({exc}); "
+                            "accepting writer output in non-strict mode."
+                        ),
+                        flush=True,
+                    )
+                    return [
+                        {
+                            "arxiv_id": record["arxiv_id"],
+                            "one_line_summary": record["one_line_summary"],
+                            "one_line_summary_en": record["one_line_summary_en"],
+                            "core_highlights": record["core_highlights"],
+                            "core_highlights_en": record["core_highlights_en"],
+                            "application_scenarios": record["application_scenarios"],
+                            "application_scenarios_en": record["application_scenarios_en"],
+                        }
+                        for record in writer_records
+                    ], []
                 try:
                     review_result = self.ai_processor.repair_reviewer_output(exc.raw_output, writer_output)
                     rejected_ids = review_result["rejected_ids"] if review_result["status"] == "REJECTED" else []
@@ -629,6 +649,26 @@ class Pipeline:
                         }
                     )
             except Exception as exc:
+                if not settings.PIPELINE_REVIEWER_STRICT:
+                    print(
+                        (
+                            f"[pipeline][{category}] reviewer stage exception ({exc}); "
+                            "accepting writer output in non-strict mode."
+                        ),
+                        flush=True,
+                    )
+                    return [
+                        {
+                            "arxiv_id": record["arxiv_id"],
+                            "one_line_summary": record["one_line_summary"],
+                            "one_line_summary_en": record["one_line_summary_en"],
+                            "core_highlights": record["core_highlights"],
+                            "core_highlights_en": record["core_highlights_en"],
+                            "application_scenarios": record["application_scenarios"],
+                            "application_scenarios_en": record["application_scenarios_en"],
+                        }
+                        for record in writer_records
+                    ], []
                 if attempt >= max_retries:
                     raise
                 writer_history.append(

@@ -184,7 +184,7 @@ class AIProcessor:
             self.editor_prompt,
             "\n".join(input_text),
             longform=True,
-            max_tokens=max(4096, 1200 * len(locked_papers)),
+            max_tokens=max(settings.KIMI_EDITOR_MAX_TOKENS, 1200 * len(locked_papers)),
         )
         try:
             self.parse_editor_records(output, locked_papers)
@@ -307,7 +307,14 @@ class AIProcessor:
             f"{editor_brief}\n\n---\n\n" + "\n".join(context),
             history=history,
             longform=True,
-            max_tokens=max(4096, (1800 if category == "focus" else 1200) * len(selected_ids)),
+            max_tokens=max(
+                (
+                    settings.KIMI_WRITER_FOCUS_MAX_TOKENS
+                    if category == "focus"
+                    else settings.KIMI_WRITER_WATCHING_MAX_TOKENS
+                ),
+                (1800 if category == "focus" else 1200) * len(selected_ids),
+            ),
         )
         try:
             self.parse_writer_records(output, papers_metadata, category)
@@ -320,7 +327,7 @@ class AIProcessor:
             self.reviewer_prompt,
             writer_output,
             longform=True,
-            max_tokens=2048,
+            max_tokens=max(256, settings.KIMI_REVIEWER_MAX_TOKENS),
         ).strip()
         try:
             return self._parse_reviewer_result(output, writer_output)

@@ -18,6 +18,15 @@ from app.core.specs import (
 )
 
 
+def _safe_progress_log(message: str) -> None:
+    try:
+        print(message, flush=True)
+    except BrokenPipeError:
+        # Keep pipeline execution alive when stdout pipe is closed
+        # (for example detached SSH sessions during long backfill runs).
+        return
+
+
 class Pipeline:
     """
     Orchestrator implementing the PRD v2.25 pipeline:
@@ -97,7 +106,7 @@ class Pipeline:
 
             refreshed_titles = self._refresh_selected_titles(issue_date)
             if refreshed_titles:
-                print(f"[pipeline] refreshed localized titles: {refreshed_titles}", flush=True)
+                _safe_progress_log(f"[pipeline] refreshed localized titles: {refreshed_titles}")
 
             task_log.fetched_count = fetched_count
             task_log.processed_count = processed_count
@@ -266,12 +275,11 @@ class Pipeline:
                 continue
 
             attempted_count += 1
-            print(
+            _safe_progress_log(
                 (
                     f"[pipeline][{category}] processing {arxiv_id} "
                     f"attempted={attempted_count}/{max_attempts} accepted={len(accepted_ids)}/{target_count}"
-                ),
-                flush=True,
+                )
             )
 
             summary = paper["_summary"]
@@ -279,27 +287,24 @@ class Pipeline:
                 self._ensure_localized_title(paper)
                 parsed_results, rejected_ids = self._run_ai_batch([paper], category)
             except Exception as exc:
-                print(
-                    f"[pipeline][{category}] {arxiv_id} failed before reviewer acceptance: {exc}",
-                    flush=True,
+                _safe_progress_log(
+                    f"[pipeline][{category}] {arxiv_id} failed before reviewer acceptance: {exc}"
                 )
                 rejected_blacklist.add(arxiv_id)
                 self._demote_summary(summary)
                 continue
 
             if arxiv_id in rejected_ids:
-                print(
-                    f"[pipeline][{category}] {arxiv_id} rejected by reviewer after retries.",
-                    flush=True,
+                _safe_progress_log(
+                    f"[pipeline][{category}] {arxiv_id} rejected by reviewer after retries."
                 )
                 rejected_blacklist.add(arxiv_id)
                 self._demote_summary(summary)
                 continue
 
             if not parsed_results:
-                print(
-                    f"[pipeline][{category}] {arxiv_id} returned no parsed summary payload.",
-                    flush=True,
+                _safe_progress_log(
+                    f"[pipeline][{category}] {arxiv_id} returned no parsed summary payload."
                 )
                 rejected_blacklist.add(arxiv_id)
                 self._demote_summary(summary)
@@ -311,12 +316,11 @@ class Pipeline:
             accepted_ids.add(arxiv_id)
 
         if attempted_count >= max_attempts and len(accepted_ids) < target_count:
-            print(
+            _safe_progress_log(
                 (
                     f"[pipeline][{category}] reached attempt cap "
                     f"{max_attempts} with accepted={len(accepted_ids)}/{target_count}; stopping early."
-                ),
-                flush=True,
+                )
             )
 
         return len(accepted_ids)
@@ -513,12 +517,11 @@ class Pipeline:
 
                 last_rejected_ids = rejected_ids
                 if not settings.PIPELINE_REVIEWER_STRICT:
-                    print(
+                    _safe_progress_log(
                         (
                             f"[pipeline][{category}] reviewer rejected IDs "
                             f"{','.join(rejected_ids) or '-'}; accepting writer output in non-strict mode."
-                        ),
-                        flush=True,
+                        )
                     )
                     return [
                         {
@@ -557,12 +560,11 @@ class Pipeline:
                     content=exc.raw_output,
                 )
                 if not settings.PIPELINE_REVIEWER_STRICT:
-                    print(
+                    _safe_progress_log(
                         (
                             f"[pipeline][{category}] reviewer output invalid ({exc}); "
                             "accepting writer output in non-strict mode."
-                        ),
-                        flush=True,
+                        )
                     )
                     return [
                         {
@@ -603,12 +605,11 @@ class Pipeline:
 
                     last_rejected_ids = rejected_ids
                     if not settings.PIPELINE_REVIEWER_STRICT:
-                        print(
+                        _safe_progress_log(
                             (
                                 f"[pipeline][{category}] reviewer rejected IDs "
                                 f"{','.join(rejected_ids) or '-'}; accepting writer output in non-strict mode."
-                            ),
-                            flush=True,
+                            )
                         )
                         return [
                             {
@@ -650,12 +651,11 @@ class Pipeline:
                     )
             except Exception as exc:
                 if not settings.PIPELINE_REVIEWER_STRICT:
-                    print(
+                    _safe_progress_log(
                         (
                             f"[pipeline][{category}] reviewer stage exception ({exc}); "
                             "accepting writer output in non-strict mode."
-                        ),
-                        flush=True,
+                        )
                     )
                     return [
                         {

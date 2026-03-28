@@ -56,6 +56,23 @@ class PaperDetailResponseModel(ResponseModel):
     data: PaperDetail
 
 
+class PaperCalendarDayItem(BaseModel):
+    issue_date: date
+    has_content: bool
+    paper_count: int = 0
+
+
+class PaperCalendarPayload(BaseModel):
+    min_issue_date: Optional[date] = None
+    max_issue_date: Optional[date] = None
+    latest_with_content: Optional[date] = None
+    days: List[PaperCalendarDayItem] = []
+
+
+class PaperCalendarResponseModel(ResponseModel):
+    data: PaperCalendarPayload
+
+
 class SubscribeRequest(BaseModel):
     email: EmailStr
 

@@ -1,13 +1,16 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import case
+from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.models.domain import Paper, PaperSummary
+from app.models.domain import Paper, PaperSummary, SystemTaskLog
 from app.schemas.paper import (
+    PaperCalendarDayItem,
+    PaperCalendarPayload,
+    PaperCalendarResponseModel,
     PaperDetail,
     PaperDetailResponseModel,
     PaperListItem,
@@ -50,6 +53,13 @@ def _serialize_list_item(summary: PaperSummary, paper: Paper) -> PaperListItem:
     )
 
 
+def _iter_days(start: date, end: date):
+    cursor = start
+    while cursor <= end:
+        yield cursor
+        cursor += timedelta(days=1)
+
+
 @router.get("/papers", response_model=PaperListResponseModel)
 def get_papers(
     page: int = Query(1, ge=1),
@@ -90,6 +100,61 @@ def get_papers(
         data=PaperListPayload(
             total=total,
             items=[_serialize_list_item(summary, paper) for summary, paper in rows],
+        )
+    )
+
+
+@router.get("/papers/calendar", response_model=PaperCalendarResponseModel)
+def get_papers_calendar(
+    db: Session = Depends(get_db),
+):
+    content_rows = (
+        db.query(PaperSummary.issue_date, func.count(PaperSummary.id))
+        .filter(PaperSummary.category.in_(("focus", "watching")))
+        .group_by(PaperSummary.issue_date)
+        .order_by(PaperSummary.issue_date.asc())
+        .all()
+    )
+    content_map = {issue_date: int(count or 0) for issue_date, count in content_rows}
+
+    task_min, task_max = db.query(
+        func.min(SystemTaskLog.issue_date),
+        func.max(SystemTaskLog.issue_date),
+    ).one()
+    summary_min, summary_max = db.query(
+        func.min(PaperSummary.issue_date),
+        func.max(PaperSummary.issue_date),
+    ).one()
+
+    min_issue_date = task_min or summary_min
+    max_issue_date = task_max or summary_max
+
+    if min_issue_date is None or max_issue_date is None:
+        return PaperCalendarResponseModel(
+            data=PaperCalendarPayload(
+                min_issue_date=None,
+                max_issue_date=None,
+                latest_with_content=None,
+                days=[],
+            )
+        )
+
+    day_items = [
+        PaperCalendarDayItem(
+            issue_date=day,
+            has_content=content_map.get(day, 0) > 0,
+            paper_count=content_map.get(day, 0),
+        )
+        for day in _iter_days(min_issue_date, max_issue_date)
+    ]
+    latest_with_content = max(content_map.keys()) if content_map else None
+
+    return PaperCalendarResponseModel(
+        data=PaperCalendarPayload(
+            min_issue_date=min_issue_date,
+            max_issue_date=max_issue_date,
+            latest_with_content=latest_with_content,
+            days=day_items,
         )
     )
 

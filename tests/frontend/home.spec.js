@@ -2,12 +2,14 @@ import { ref } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '../../frontend/test-utils.js'
 
-import { paperListPayload } from '../fixtures/frontend-data'
+import { paperCalendarPayload, paperListPayload } from '../fixtures/frontend-data'
 import { createTestRouter, flushPromises, testPlugins } from './helpers'
 const getPapersMock = vi.fn()
+const getPapersCalendarMock = vi.fn()
 
 vi.mock('../../frontend/src/api/papers', () => ({
-  getPapers: (...args) => getPapersMock(...args)
+  getPapers: (...args) => getPapersMock(...args),
+  getPapersCalendar: (...args) => getPapersCalendarMock(...args)
 }))
 
 import Home from '../../frontend/src/views/Home.vue'
@@ -15,7 +17,9 @@ import Home from '../../frontend/src/views/Home.vue'
 describe('Home view', () => {
   beforeEach(() => {
     getPapersMock.mockReset()
+    getPapersCalendarMock.mockReset()
     getPapersMock.mockResolvedValue(paperListPayload)
+    getPapersCalendarMock.mockResolvedValue(paperCalendarPayload)
   })
 
   afterEach(() => {
@@ -33,7 +37,8 @@ describe('Home view', () => {
 
     await flushPromises()
 
-    expect(getPapersMock).toHaveBeenCalledWith({ page: 1, limit: 17 })
+    expect(getPapersCalendarMock).toHaveBeenCalled()
+    expect(getPapersMock).toHaveBeenCalledWith({ page: 1, limit: 100, issue_date: '2026-03-23' })
     expect(wrapper.text()).toContain('中文焦点标题')
     expect(wrapper.text()).toContain('中文观察标题')
     expect(wrapper.text()).not.toContain('中文候选标题')
@@ -51,6 +56,7 @@ describe('Home view', () => {
 
     await flushPromises()
 
+    expect(getPapersCalendarMock).toHaveBeenCalled()
     expect(wrapper.text()).toContain('Focus Title Original')
     expect(wrapper.text()).toContain('Watching Title Original')
   })
@@ -67,6 +73,21 @@ describe('Home view', () => {
     await flushPromises()
 
     expect(wrapper.text()).toContain('进入论文分类')
-    expect(wrapper.text()).toContain('最多 5 篇 Focus 与最多 12 篇 Watching')
+    expect(wrapper.text()).toContain('每页仅展示一天内容')
+  })
+
+  it('renders gray calendar cells for dates without data', async () => {
+    const router = await createTestRouter('/', '/', Home)
+    const wrapper = mount(Home, {
+      global: {
+        provide: { lang: ref('cn') },
+        plugins: [...testPlugins, router]
+      }
+    })
+
+    await flushPromises()
+
+    const noDataCells = wrapper.findAll('.calendar-cell.no-data')
+    expect(noDataCells.length).toBeGreaterThan(0)
   })
 })

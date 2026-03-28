@@ -16,6 +16,17 @@ export function getPapers(params = { page: 1, limit: 10 }) {
 }
 
 /**
+ * 获取首页日期日历（包含有数据与无数据日期）
+ * @returns {Promise<Object>} Promise resolving to { min_issue_date, max_issue_date, latest_with_content, days }
+ */
+export function getPapersCalendar() {
+  return request({
+    url: '/api/v1/papers/calendar',
+    method: 'get'
+  })
+}
+
+/**
  * 获取单篇简报详细信息
  * @param {number|string} id - The ID of the paper
  * @returns {Promise<Object>} Promise resolving to the paper detail object

@@ -65,6 +65,18 @@ export const paperListPayload = {
   ]
 }
 
+export const paperCalendarPayload = {
+  min_issue_date: '2026-03-22',
+  max_issue_date: '2026-03-25',
+  latest_with_content: '2026-03-23',
+  days: [
+    { issue_date: '2026-03-22', has_content: true, paper_count: 1 },
+    { issue_date: '2026-03-23', has_content: true, paper_count: 2 },
+    { issue_date: '2026-03-24', has_content: false, paper_count: 0 },
+    { issue_date: '2026-03-25', has_content: false, paper_count: 0 }
+  ]
+}
+
 export const focusDetail = {
   id: 1,
   arxiv_id: '2503.01001',

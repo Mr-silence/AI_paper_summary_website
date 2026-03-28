@@ -88,14 +88,32 @@ def _summarize_issue_date(issue_date: date) -> tuple[str, int, int, dict[str, in
         db.close()
 
 
-def backfill_issue_range(start_date: date, end_date: date) -> dict[str, object]:
+def _build_skipped_kimi_status(reason: str) -> dict[str, object]:
+    return {
+        "kimi_ready": None,
+        "model": settings.KIMI_MODEL,
+        "skipped": True,
+        "reason": reason,
+    }
+
+
+def backfill_issue_range(
+    start_date: date,
+    end_date: date,
+    *,
+    skip_kimi_check: bool = False,
+) -> dict[str, object]:
     if end_date < start_date:
         raise ValueError("end_date must be greater than or equal to start_date")
 
     _ensure_prompts_exist()
     database_status = ensure_database_ready()
     _validate_runtime_config()
-    kimi_status = run_checks()
+    if skip_kimi_check:
+        print("[range] skip Kimi connectivity precheck by flag", flush=True)
+        kimi_status = _build_skipped_kimi_status("skipped by --skip-kimi-check")
+    else:
+        kimi_status = run_checks()
 
     results: list[BackfillResult] = []
     skipped_success = 0
@@ -181,11 +199,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Backfill pipeline results for an inclusive issue_date range.")
     parser.add_argument("--start-date", default="2026-02-13")
     parser.add_argument("--end-date", default=_default_end_date().isoformat())
+    parser.add_argument(
+        "--skip-kimi-check",
+        action="store_true",
+        help="Skip preflight Kimi connectivity checks. Useful when TPD is exhausted but you want to rerun later without changing the command.",
+    )
     args = parser.parse_args()
 
     result = backfill_issue_range(
         start_date=_parse_date(args.start_date),
         end_date=_parse_date(args.end_date),
+        skip_kimi_check=bool(args.skip_kimi_check),
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

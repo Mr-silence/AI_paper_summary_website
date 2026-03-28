@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+from datetime import date
 
 import pytest
 
@@ -743,6 +744,26 @@ def test_run_uses_quantity_first_fallback_when_supply_is_insufficient(db_session
     assert task_log.processed_count == 2
     assert len(summaries) == 2
     assert all(summary.category == "focus" for summary in summaries)
+
+
+def test_fetch_with_backtrack_uses_previous_available_date(db_session, monkeypatch):
+    pipeline = Pipeline(db_session)
+    calls = []
+
+    def fake_fetch(fetch_date):
+        calls.append(fetch_date)
+        if fetch_date == "2026-02-13":
+            return [{"arxiv_id": "paper-available"}]
+        return []
+
+    pipeline.crawler.fetch_papers = fake_fetch
+    monkeypatch.setattr(settings, "PIPELINE_FETCH_BACKTRACK_DAYS", 3)
+
+    papers, resolved_date = pipeline._fetch_with_backtrack(date(2026, 2, 15))
+
+    assert papers == [{"arxiv_id": "paper-available"}]
+    assert resolved_date.isoformat() == "2026-02-13"
+    assert calls == ["2026-02-15", "2026-02-14", "2026-02-13"]
 
 
 def test_quantity_first_pipeline_uses_full_snapshots_and_standard_ai_batches(db_session):

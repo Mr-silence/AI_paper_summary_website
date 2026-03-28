@@ -47,9 +47,17 @@ class Pipeline:
         processed_count = 0
 
         try:
-            fetch_date = issue_date - timedelta(days=3)
-            raw_papers = self.crawler.fetch_papers(fetch_date=fetch_date.isoformat())
+            fetch_anchor_date = issue_date - timedelta(days=3)
+            raw_papers, resolved_fetch_date = self._fetch_with_backtrack(fetch_anchor_date)
             fetched_count = len(raw_papers)
+            if resolved_fetch_date != fetch_anchor_date:
+                _safe_progress_log(
+                    (
+                        f"[pipeline] fetch_date fallback: issue_date={issue_date.isoformat()} "
+                        f"anchor={fetch_anchor_date.isoformat()} resolved={resolved_fetch_date.isoformat()} "
+                        f"fetched={fetched_count}"
+                    )
+                )
 
             scored_papers = sorted(
                 [self.scorer.score_paper(paper) for paper in raw_papers],
@@ -808,6 +816,15 @@ class Pipeline:
         if isinstance(value, date):
             return value
         return datetime.strptime(str(value), "%Y-%m-%d").date()
+
+    def _fetch_with_backtrack(self, fetch_anchor_date: date) -> Tuple[List[Dict[str, Any]], date]:
+        max_backtrack_days = max(0, int(settings.PIPELINE_FETCH_BACKTRACK_DAYS or 0))
+        for offset in range(0, max_backtrack_days + 1):
+            candidate_date = fetch_anchor_date - timedelta(days=offset)
+            raw_papers = self.crawler.fetch_papers(fetch_date=candidate_date.isoformat())
+            if raw_papers:
+                return raw_papers, candidate_date
+        return [], fetch_anchor_date
 
 
 if __name__ == "__main__":

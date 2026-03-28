@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     PIPELINE_ENABLE_WATCHING: bool = True
     PIPELINE_REVIEWER_STRICT: bool = True
     PIPELINE_PROBE_DAYS: int = 14
+    PIPELINE_FETCH_BACKTRACK_DAYS: int = 3
     MYSQL_UNIX_SOCKET: str = ""
     SMTP_HOST: str = ""
     SMTP_PORT: int = 587

@@ -5,7 +5,9 @@
         <h2 v-if="lang === 'cn'">最新简报</h2>
         <h2 v-else>Latest Briefings</h2>
         <p class="subtitle">
-          {{ lang === 'cn' ? '每页仅展示一天内容。右侧日历可快速跳转；无数据日期会显示为灰色。' : 'Each page shows one issue date only. Use the calendar on the right for quick jumps; dates without data are shown in gray.' }}
+          {{ lang === 'cn'
+            ? '每日从数百篇前沿AI论文中产出最多5篇Focus与最多12篇Watching，实际数量取决于当日供给与生成结果。每页仅展示一天内容。右侧日历可快速跳转；无数据日期会显示为灰色。'
+            : 'Each issue produces up to 5 Focus papers and up to 12 Watching papers from hundreds of frontier AI papers, and the actual count depends on daily supply and generation results. Each page shows one issue date only. Use the calendar on the right for quick jumps; dates without data are shown in gray.' }}
         </p>
       </div>
       <el-button class="topics-entry-button" type="primary" plain @click="goToTopics">

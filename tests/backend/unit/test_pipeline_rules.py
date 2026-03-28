@@ -449,9 +449,9 @@ def test_record_uniform_stage_traces_offsets_invalid_attempt_number():
     assert collected[0].attempt_no == 21
 
 
-def test_refresh_selected_titles_updates_focus_and_watching_fallbacks(db_session):
+def test_refresh_selected_titles_updates_all_issue_fallbacks(db_session):
     issue_date = Pipeline._resolve_issue_date("2026-03-27")
-    paper = Paper(
+    focus_paper = Paper(
         arxiv_id="2603.00001",
         title_zh="待翻译：Agentic Planning for Production",
         title_original="Agentic Planning for Production",
@@ -462,11 +462,22 @@ def test_refresh_selected_titles_updates_focus_and_watching_fallbacks(db_session
         upvotes=12,
         arxiv_publish_date=Pipeline._resolve_issue_date("2026-03-24"),
     )
-    db_session.add(paper)
+    candidate_paper = Paper(
+        arxiv_id="2603.00002",
+        title_zh="待翻译：Long Horizon Training Signals",
+        title_original="Long Horizon Training Signals",
+        authors=[{"name": "Bob", "affiliation": "CMU"}],
+        venue="arXiv",
+        abstract="demo",
+        pdf_url="https://arxiv.org/pdf/2603.00002.pdf",
+        upvotes=3,
+        arxiv_publish_date=Pipeline._resolve_issue_date("2026-03-24"),
+    )
+    db_session.add_all([focus_paper, candidate_paper])
     db_session.flush()
 
-    summary = PaperSummary(
-        paper_id=paper.id,
+    focus_summary = PaperSummary(
+        paper_id=focus_paper.id,
         issue_date=issue_date,
         score=91,
         score_reasons={},
@@ -474,19 +485,35 @@ def test_refresh_selected_titles_updates_focus_and_watching_fallbacks(db_session
         candidate_reason=None,
         direction="Agent",
     )
-    db_session.add(summary)
+    candidate_summary = PaperSummary(
+        paper_id=candidate_paper.id,
+        issue_date=issue_date,
+        score=47,
+        score_reasons={},
+        category="candidate",
+        candidate_reason="low_score",
+        direction="Agent",
+    )
+    db_session.add_all([focus_summary, candidate_summary])
     db_session.commit()
 
     pipeline = Pipeline(db_session)
     pipeline.ai_processor.localize_titles = lambda papers, batch_size=None: {
-        papers[0]["arxiv_id"]: "面向生产的智能体规划"
+        paper["arxiv_id"]: (
+            "面向生产的智能体规划"
+            if paper["arxiv_id"] == "2603.00001"
+            else "长周期训练信号"
+        )
+        for paper in papers
     }
 
     updated = pipeline._refresh_selected_titles(issue_date)
-    db_session.refresh(paper)
+    db_session.refresh(focus_paper)
+    db_session.refresh(candidate_paper)
 
-    assert updated == 1
-    assert paper.title_zh == "面向生产的智能体规划"
+    assert updated == 2
+    assert focus_paper.title_zh == "面向生产的智能体规划"
+    assert candidate_paper.title_zh == "长周期训练信号"
 
 
 def test_run_ai_batch_persists_editor_writer_and_reviewer_traces(db_session):

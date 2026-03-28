@@ -353,7 +353,6 @@ class Pipeline:
             .join(Paper, Paper.id == PaperSummary.paper_id)
             .filter(
                 PaperSummary.issue_date == issue_date,
-                PaperSummary.category.in_(("focus", "watching")),
                 Paper.title_zh.like("待翻译：%"),
             )
             .all()

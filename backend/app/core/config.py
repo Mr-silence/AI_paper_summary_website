@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     BACKEND_PUBLIC_URL: str = "http://localhost:8000"
     FRONTEND_URL: str = "http://localhost:5173"
     KIMI_API_KEY: str = ""
+    MINIMAX_API_KEY: str = ""
     KIMI_BASE_URL: str = "https://api.minimaxi.com/v1"
     KIMI_MODEL: str = "MiniMax-M2.5"
     KIMI_TIMEOUT_SECONDS: int = 60
@@ -40,6 +41,10 @@ class Settings(BaseSettings):
     HUGGINGFACE_API_URL: str = "https://huggingface.co/api/daily_papers"
     SEMANTIC_SCHOLAR_TIMEOUT_SECONDS: int = 5
     CRAWLER_CITATION_MAX_WORKERS: int = 16
+
+    @property
+    def LLM_API_KEY(self) -> str:
+        return (self.MINIMAX_API_KEY or self.KIMI_API_KEY or "").strip()
 
     model_config = SettingsConfigDict(
         env_file=".env",

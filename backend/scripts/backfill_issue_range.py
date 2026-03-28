@@ -52,7 +52,7 @@ def _iter_issue_dates(start_date: date, end_date: date):
 
 def _validate_runtime_config() -> None:
     required_values = {
-        "KIMI_API_KEY": settings.KIMI_API_KEY.strip(),
+        "LLM_API_KEY": settings.LLM_API_KEY,
         "KIMI_MODEL": settings.KIMI_MODEL.strip(),
         "KIMI_BASE_URL": settings.KIMI_BASE_URL.strip(),
     }

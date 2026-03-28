@@ -27,8 +27,8 @@ class AIProcessor:
     WRITER_BLOCK_PATTERN = r"## \[(.*?)\]\s*\n"
     REVIEWER_ANCHOR_PATTERN = r"- \*\*整体结论\*\*:"
 
-    def __init__(self, api_key: str = settings.KIMI_API_KEY):
-        self.api_key = api_key
+    def __init__(self, api_key: str | None = None):
+        self.api_key = (api_key or settings.LLM_API_KEY).strip()
         self._clients: Dict[int, OpenAI] = {}
         self._next_request_at = 0.0
 

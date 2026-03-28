@@ -13,11 +13,12 @@ from app.core.config import settings
 
 
 def _build_client() -> OpenAI:
-    if not settings.KIMI_API_KEY.strip():
-        raise RuntimeError("KIMI_API_KEY is not configured.")
+    api_key = settings.LLM_API_KEY
+    if not api_key:
+        raise RuntimeError("No LLM API key configured. Set MINIMAX_API_KEY (or legacy KIMI_API_KEY).")
 
     return OpenAI(
-        api_key=settings.KIMI_API_KEY,
+        api_key=api_key,
         base_url=settings.KIMI_BASE_URL,
         timeout=settings.KIMI_TIMEOUT_SECONDS,
         max_retries=0,

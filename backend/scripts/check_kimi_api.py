@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -10,6 +11,40 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.core.config import settings
+
+
+def _extract_json_object(raw_text: str) -> dict:
+    text = str(raw_text or "").strip()
+    if not text:
+        raise RuntimeError("LLM JSON check returned empty content.")
+
+    # Handle fenced payloads first.
+    if "```" in text:
+        fenced = re.findall(r"```(?:json)?\s*([\s\S]*?)\s*```", text, flags=re.IGNORECASE)
+        for block in reversed(fenced):
+            candidate = block.strip()
+            if not candidate:
+                continue
+            try:
+                parsed = json.loads(candidate)
+                if isinstance(parsed, dict):
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+
+    # Fallback: decode the first JSON object embedded in mixed text.
+    decoder = json.JSONDecoder()
+    for index, char in enumerate(text):
+        if char != "{":
+            continue
+        try:
+            parsed, _ = decoder.raw_decode(text[index:])
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError:
+            continue
+
+    raise RuntimeError("LLM JSON check did not return a valid JSON object.")
 
 
 def _build_client() -> OpenAI:
@@ -87,9 +122,7 @@ def run_checks() -> dict[str, object]:
         response_format={"type": "json_object"},
     )
     json_content = json_completion.choices[0].message.content or ""
-    parsed_json = json.loads(json_content)
-    if not isinstance(parsed_json, dict):
-        raise RuntimeError("Kimi JSON Mode check did not return a JSON object.")
+    parsed_json = _extract_json_object(json_content)
 
     return {
         "kimi_ready": True,

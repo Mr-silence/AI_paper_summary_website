@@ -58,15 +58,21 @@ def test_run_daily_update_job_sends_owner_alert_on_failure(session_factory):
         alerts.append(kwargs)
         return {"status": "sent"}
 
-    with pytest.raises(RuntimeError, match="pipeline boom"):
-        run_daily_update_job(
-            issue_date=date(2026, 3, 27),
-            skip_owner_alert=False,
-            session_factory=session_factory,
-            pipeline_cls=FailingPipeline,
-            ensure_database=lambda: None,
-            alert_sender=fake_alert_sender,
-        )
+    original_validate_runtime_config = run_daily_update_job.__globals__["_validate_runtime_config"]
+    run_daily_update_job.__globals__["_validate_runtime_config"] = lambda: None
+
+    try:
+        with pytest.raises(RuntimeError, match="pipeline boom"):
+            run_daily_update_job(
+                issue_date=date(2026, 3, 27),
+                skip_owner_alert=False,
+                session_factory=session_factory,
+                pipeline_cls=FailingPipeline,
+                ensure_database=lambda: None,
+                alert_sender=fake_alert_sender,
+            )
+    finally:
+        run_daily_update_job.__globals__["_validate_runtime_config"] = original_validate_runtime_config
 
     assert len(alerts) == 1
     assert alerts[0]["issue_date"] == date(2026, 3, 27)

@@ -293,7 +293,7 @@ const route = useRoute()
 
 const loading = ref(false)
 const selectedDate = ref('')
-const selectedGroup = ref({ date: '', focus: [], watching: [] })
+const selectedGroup = ref({ date: '', focus: [], watching: [], candidateCount: 0 })
 
 const minIssueDate = ref('')
 const maxIssueDate = ref('')
@@ -319,11 +319,7 @@ const dateStateMap = computed(() => {
 
 const focusCount = computed(() => selectedGroup.value.focus.length)
 const watchingCount = computed(() => selectedGroup.value.watching.length)
-const candidateCount = computed(() => {
-  const currentDay = dateStateMap.value.get(selectedDate.value)
-  if (!currentDay) return 0
-  return Math.max((currentDay.paper_count || 0) - focusCount.value - watchingCount.value, 0)
-})
+const candidateCount = computed(() => selectedGroup.value.candidateCount || 0)
 
 const recentContentDays = computed(() => (
   calendarDays.value
@@ -413,19 +409,26 @@ function isDateInRange(dateKey, minDate, maxDate) {
   return true
 }
 
-function buildSelectedGroup(items, dateKey) {
+function buildSelectedGroup(items, dateKey, totalCount) {
   const focus = []
   const watching = []
+  let candidatesInPage = 0
   items.forEach((paper) => {
     if (paper.category === 'focus') {
       focus.push(paper)
     } else if (paper.category === 'watching') {
       watching.push(paper)
+    } else if (paper.category === 'candidate') {
+      candidatesInPage += 1
     }
   })
   focus.sort((a, b) => b.score - a.score)
   watching.sort((a, b) => b.score - a.score)
-  return { date: dateKey, focus, watching }
+  const parsedTotal = Number(totalCount)
+  const candidateCount = Number.isFinite(parsedTotal)
+    ? Math.max(parsedTotal - focus.length - watching.length, 0)
+    : candidatesInPage
+  return { date: dateKey, focus, watching, candidateCount }
 }
 
 function getSignalEntries(scoreReasons) {
@@ -472,7 +475,7 @@ async function fetchCalendar() {
     }
   } catch (error) {
     calendarDays.value = []
-    selectedGroup.value = { date: '', focus: [], watching: [] }
+    selectedGroup.value = { date: '', focus: [], watching: [], candidateCount: 0 }
   }
 }
 
@@ -481,12 +484,12 @@ async function fetchPapersByDate(issueDate) {
   loading.value = true
   const requestId = ++currentRequestId
   try {
-    const data = await getPapers({ page: 1, limit: 100, issue_date: issueDate })
+    const data = await getPapers({ page: 1, limit: 100, issue_date: issueDate, include_candidates: true })
     if (requestId !== currentRequestId) return
-    selectedGroup.value = buildSelectedGroup(data.items || [], issueDate)
+    selectedGroup.value = buildSelectedGroup(data.items || [], issueDate, data.total)
   } catch (error) {
     if (requestId !== currentRequestId) return
-    selectedGroup.value = { date: issueDate, focus: [], watching: [] }
+    selectedGroup.value = { date: issueDate, focus: [], watching: [], candidateCount: 0 }
   } finally {
     if (requestId === currentRequestId) {
       loading.value = false

@@ -38,11 +38,31 @@ describe('Home view', () => {
     await flushPromises()
 
     expect(getPapersCalendarMock).toHaveBeenCalled()
-    expect(getPapersMock).toHaveBeenCalledWith({ page: 1, limit: 100, issue_date: '2026-03-23' })
+    expect(getPapersMock).toHaveBeenCalledWith({
+      page: 1,
+      limit: 100,
+      issue_date: '2026-03-23',
+      include_candidates: true
+    })
     expect(wrapper.text()).toContain('中文焦点标题')
     expect(wrapper.text()).toContain('中文观察标题')
     expect(wrapper.text()).not.toContain('中文候选标题')
     expect(wrapper.text().indexOf('中文焦点标题')).toBeLessThan(wrapper.text().indexOf('中文观察标题'))
+  })
+
+  it('shows the candidate pool count from the full issue payload', async () => {
+    const router = await createTestRouter('/', '/', Home)
+    const wrapper = mount(Home, {
+      global: {
+        provide: { lang: ref('cn') },
+        plugins: [...testPlugins, router]
+      }
+    })
+
+    await flushPromises()
+
+    const metrics = wrapper.findAll('.poster-metric strong')
+    expect(metrics.map((metric) => metric.text())).toEqual(['1', '1', '2'])
   })
 
   it('switches to original titles in English mode', async () => {

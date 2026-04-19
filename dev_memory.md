@@ -134,6 +134,45 @@
 ## 8. 持续维护规则
 - 以后在本仓库每次完成重要开发、修复、架构调整或协作约束变化后，更新本文件。
 - 更新时保留历史阶段记录，采用追加或局部修订，不丢弃已有开发上下文。
+
+## 9. 最新进展记录
+
+### [2026-04-20] 前端概念稿收口、真实后端联调与本地 MySQL 重建
+- 当前工作分支：`codex/frontend-concept-redesign`。
+- 已完成前端视觉重构概念稿：
+  - 保留 Vue 3 + Vite 技术栈，不更换框架。
+  - 首页、详情页、候选池页、分类页、退订页完成暖白/炭黑/低饱和强调色的编辑化视觉改造。
+  - 移动端 Header 改为抽屉式导航，并补齐遮罩关闭、路由切换关闭、Esc 关闭与 body scroll lock。
+  - 首页和详情页的方向标签已改为可点击入口，可直接跳转到对应方向页。
+  - 失败的液态玻璃按钮方案已回滚；主按钮当前采用稳定纯黑高对比样式，移动端不启用复杂动态玻璃效果。
+- 已新增运行时 mock 预览能力：
+  - `VITE_USE_MOCK_BRIEF_DATA=true` 时使用 `frontend/src/mocks/` 数据。
+  - 默认不设置该变量，正式运行和普通本地运行继续请求真实后端 API。
+- 已重建本机 MySQL 环境：
+  - 卸载旧 Oracle MySQL 与旧 Homebrew 数据目录。
+  - 使用 Homebrew 安装 MySQL `9.6.0_2`。
+  - 本地 root 密码设为 `password`。
+  - `backend/scripts/setup_local_db.py` 已重新初始化 `ai_paper_summary` 数据库并通过 schema 校验。
+- 为加速联调，已从生产服务器导出并导入最近有内容的两期数据：
+  - `2026-04-18`: Focus 5、Watching 9、Candidate 26。
+  - `2026-04-19`: Focus 5、Watching 10、Candidate 35。
+  - 本地 `paper` 共 90 条，`paper_ai_trace` 共 145 条。
+  - 本地 `system_task_log` 中两期均为 `SUCCESS`。
+- 已完成真实后端接口联调：
+  - 本地后端运行在 `127.0.0.1:8000`。
+  - 本地前端运行在 `127.0.0.1:4173`，使用 `VITE_API_BASE_URL=http://127.0.0.1:8000`，未启用 mock。
+  - `/api/v1/papers/calendar`、`/api/v1/papers`、`include_candidates=true` 候选池接口均返回真实本地 MySQL 数据。
+- README 首页截图 `image/readme-home-v2.png` 已使用真实 API 数据重新截取，尺寸保持 `1365 x 900`。
+- 重要踩坑记录：
+  - `.mobile-only { display: block !important; }` 曾覆盖移动端按钮容器的 flex 布局，导致订阅按钮和菜单按钮垂直错位；后续不要把需要 flex 对齐的容器直接挂 `.mobile-only`。
+  - 用户明确否定液态玻璃按钮方案；后续不要再恢复动态玻璃、黑色光晕或文字边缘发白的按钮效果。
+ - 详情页事实卡字段已进一步收口：
+   - 第二张信息卡不再展示 `venue`，而是展示 `authors[].affiliation` 聚合后的“作者单位”。
+   - 已通过真实生产接口验证：论文 `paper_id=6652`（GameWorld）返回的 `authors[*].affiliation` 全为空字符串，且 `venue=null`；因此该字段缺失不是前端展示 bug，而是上游源数据未提供。
+   - 前端当前策略为：有 affiliation 时做去空、去重、压缩展示；若源数据未提供，则明确展示“论文源未提供作者单位”，不再显示空白或误用 `venue` 冒充机构信息。
+ - `Detailed_PRD.md` 已同步这条当前实现语义：
+   - 详情页事实卡固定展示作者、作者单位、arXiv 编号。
+   - 作者单位缺失时必须明确提示，不得将 `venue` 伪装为作者单位。
 # Gemini CLI - 专属工作总结与上下文记忆
 
 ## 1. 角色定位与职责

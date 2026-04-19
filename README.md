@@ -5,7 +5,7 @@
 它不是简单的论文聚合页，而是一条完整的生产链：抓取真实论文源，按规则打分筛选，对入选论文生成中文标题和双语解读，按 `issue_date` 快照落库，并通过 Web 界面和邮件日报对外分发。
 
 <p align="center">
-  <img src="./image/Title%20Image.png" alt="ArxivDaily 标题图" width="100%" />
+  <img src="./image/Title%20Image.png" alt="ArxivDaily 标题图" width="100%" style="display:block;" />
 </p>
 
 ## 项目现在能做什么
@@ -25,14 +25,14 @@
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="./image/readme-home-v2.png" alt="首页预览" width="100%" />
+      <img src="./image/readme-home-v2.png" alt="首页预览" width="100%" style="display:block;" />
       <br />
       <strong>首页</strong>
       <br />
       每页只展示一天内容，右侧日历可快速跳转
     </td>
     <td align="center" width="50%">
-      <img src="./image/readme-detail.png" alt="论文详情页预览" width="100%" />
+      <img src="./image/readme-detail.png" alt="论文详情页预览" width="100%" style="display:block;" />
       <br />
       <strong>论文详情页</strong>
       <br />
@@ -41,14 +41,14 @@
   </tr>
   <tr>
     <td align="center" width="50%">
-      <img src="./image/readme-sources.png" alt="候选池预览" width="100%" />
+      <img src="./image/readme-sources.png" alt="候选池预览" width="100%" style="display:block;" />
       <br />
       <strong>候选池明细</strong>
       <br />
       展示保留到快照中的全部候选论文、总分与加分项
     </td>
     <td align="center" width="50%">
-      <img src="./image/readme-topics.png" alt="分类页预览" width="100%" />
+      <img src="./image/readme-topics.png" alt="分类页预览" width="100%" style="display:block;" />
       <br />
       <strong>分类总览页</strong>
       <br />
@@ -57,7 +57,7 @@
   </tr>
   <tr>
     <td align="center" colspan="2">
-      <img src="./image/readme-topic-agent.png" alt="方向页预览" width="100%" />
+      <img src="./image/readme-topic-agent.png" alt="方向页预览" width="100%" style="display:block;" />
       <br />
       <strong>方向聚合页</strong>
       <br />
@@ -187,7 +187,7 @@ External Sources
 ```
 
 <p align="center">
-  <img src="./image/Structural%20diagram.png" alt="ArxivDaily 结构图" width="100%" />
+  <img src="./image/Structural%20diagram.png" alt="ArxivDaily 结构图" width="100%" style="display:block;" />
 </p>
 
 ## 前后端能力边界

@@ -3,12 +3,14 @@
     <section class="hero-band surface-panel">
       <div class="hero-copy">
         <p class="eyebrow">{{ lang === 'cn' ? 'Frontier AI editorial brief' : 'Frontier AI editorial brief' }}</p>
-        <h1 class="hero-title serif-title">
-          {{
-            lang === 'cn'
-              ? '每天只留下真正值得点开的那几篇。'
-              : 'A calmer read on the few AI papers that are actually worth opening.'
-          }}
+        <h1 class="hero-title serif-title" :class="lang === 'en' ? 'hero-title-en' : 'hero-title-cn'">
+          <template v-if="lang === 'cn'">
+            <span class="hero-title-line">海量论文里</span>
+            <span class="hero-title-line">只留下重点</span>
+          </template>
+          <template v-else>
+            Frontier AI, filtered down.
+          </template>
         </h1>
         <p class="hero-summary">
           {{ lang === 'cn'
@@ -33,7 +35,7 @@
       <div class="hero-poster interactive-lift">
         <p class="eyebrow">{{ lang === 'cn' ? '当期概览' : 'Issue overview' }}</p>
         <div class="poster-date serif-title">{{ selectedDate || '--' }}</div>
-        <div class="poster-metrics">
+        <div class="poster-metrics" :class="{ 'poster-metrics-en': lang === 'en' }">
           <div class="poster-metric interactive-lift">
             <span>{{ lang === 'cn' ? 'Focus' : 'Focus' }}</span>
             <strong>{{ focusCount }}</strong>
@@ -148,7 +150,6 @@
               <p class="eyebrow">Watching</p>
               <h2 class="section-title serif-title">{{ lang === 'cn' ? '还值得继续盯的信号' : 'Signals still worth tracking' }}</h2>
             </div>
-            <p class="section-caption">{{ watchingCount }}</p>
           </div>
 
           <div class="watching-ledger surface-panel">
@@ -577,6 +578,23 @@ watch(() => route.query.date, (newDate) => {
   line-height: 0.95;
 }
 
+.hero-title-cn {
+  width: fit-content;
+  max-width: none;
+}
+
+.hero-title-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero-title-en {
+  max-width: 14ch;
+  font-size: clamp(31px, 4.1vw, 52px);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
 .hero-summary {
   max-width: 60ch;
   margin: 18px 0 0;
@@ -637,6 +655,13 @@ watch(() => route.query.date, (newDate) => {
   margin-top: 8px;
   font-size: 28px;
   color: var(--ink-strong);
+}
+
+.poster-metrics-en .poster-metric span {
+  display: flex;
+  align-items: flex-start;
+  min-height: 2.5em;
+  line-height: 1.25;
 }
 
 .poster-note {
@@ -797,7 +822,8 @@ watch(() => route.query.date, (newDate) => {
 }
 
 .watching-ledger {
-  padding: 12px 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .watching-row {
@@ -806,10 +832,22 @@ watch(() => route.query.date, (newDate) => {
   gap: 18px;
   padding: 20px 24px;
   cursor: pointer;
+  border-radius: 0;
+  position: relative;
 }
 
 .watching-row + .watching-row {
   border-top: 1px solid var(--line-soft);
+}
+
+.watching-row:first-child {
+  border-top-left-radius: calc(var(--radius-xl) - 12px);
+  border-top-right-radius: calc(var(--radius-xl) - 12px);
+}
+
+.watching-row:last-child {
+  border-bottom-left-radius: calc(var(--radius-xl) - 12px);
+  border-bottom-right-radius: calc(var(--radius-xl) - 12px);
 }
 
 .watching-row:hover {
@@ -1042,6 +1080,14 @@ watch(() => route.query.date, (newDate) => {
   .hero-title {
     max-width: 9ch;
     font-size: clamp(34px, 10vw, 52px);
+  }
+
+  .hero-title-cn {
+    max-width: none;
+  }
+
+  .hero-title-line {
+    white-space: normal;
   }
 
   .hero-summary {

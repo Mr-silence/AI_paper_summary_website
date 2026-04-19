@@ -5,17 +5,19 @@
         <button class="secondary-button" type="button" @click="$router.push('/')">
           {{ lang === 'cn' ? '返回首页' : 'Back to home' }}
         </button>
-        <p class="eyebrow">{{ lang === 'cn' ? '原始候选池' : 'Candidate pool' }}</p>
-        <h1 class="serif-title">
-          {{ lang === 'cn' ? '评分结果' : 'All scored papers for the selected issue' }}
-        </h1>
-        <p class="sources-copy">
-          {{
-            lang === 'cn'
-              ? '展示当日前 50 篇进入评分引擎的论文、加分项、分层结果与未入选原因。'
-              : 'A complete audit surface of scored papers, signals, tier assignment, and non-selection reasons.'
-          }}
-        </p>
+        <div class="sources-copy-block">
+          <p class="eyebrow">{{ lang === 'cn' ? '原始候选池' : 'Candidate pool' }}</p>
+          <h1 class="serif-title">
+            {{ lang === 'cn' ? '评分结果' : 'All scored papers for the selected issue' }}
+          </h1>
+          <p class="sources-copy">
+            {{
+              lang === 'cn'
+                ? '展示当日前 50 篇进入评分引擎的论文、加分项、分层结果与未入选原因。'
+                : 'A complete audit surface of scored papers, signals, tier assignment, and non-selection reasons.'
+            }}
+          </p>
+        </div>
       </div>
 
       <div class="sources-stats">
@@ -84,7 +86,7 @@
               <span
                 v-for="[key, val] in getScoreReasonEntries(paper.score_reasons)"
                 :key="key"
-                class="chip"
+                class="chip signal-chip"
               >
                 <strong>{{ formatReason(key) }}</strong> +{{ val }}
               </span>
@@ -95,7 +97,7 @@
               <span class="chip" :class="getTierChipClass(paper.category)">
                 {{ paper.category }}
               </span>
-              <span class="tier-reason">{{ formatCandidateReason(paper.candidate_reason) }}</span>
+              <span v-if="paper.candidate_reason" class="tier-reason">{{ formatCandidateReason(paper.candidate_reason) }}</span>
             </div>
           </article>
         </div>
@@ -172,7 +174,6 @@ function formatReason(key) {
 }
 
 function formatCandidateReason(reason) {
-  if (!reason) return '-'
   const map = {
     low_score: lang.value === 'cn' ? '低分归档' : 'Low Score',
     capacity_overflow: lang.value === 'cn' ? '容量溢出' : 'Capacity Overflow',
@@ -229,9 +230,28 @@ onMounted(fetchCandidates)
   line-height: 0.98;
 }
 
+.sources-headline {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  min-height: 100%;
+}
+
+.sources-headline > .secondary-button {
+  justify-self: flex-start;
+}
+
+.sources-copy-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100%;
+  padding-top: clamp(4px, 1vw, 12px);
+}
+
 .sources-copy {
   max-width: 56ch;
-  margin: 16px 0 0;
+  margin: 18px 0 0;
   color: var(--ink-muted);
   line-height: 1.8;
 }
@@ -361,8 +381,26 @@ onMounted(fetchCandidates)
   gap: 8px;
 }
 
+.row-signals {
+  gap: 6px;
+  align-content: flex-start;
+}
+
 .paper-meta {
   margin-top: 12px;
+}
+
+.signal-chip {
+  gap: 6px;
+  min-height: 30px;
+  padding: 6px 11px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.signal-chip strong {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .row-tier {

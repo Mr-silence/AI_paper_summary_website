@@ -42,4 +42,20 @@ describe('Sources view', () => {
     expect(wrapper.text()).toContain('代码可用')
     expect(wrapper.text()).toContain('低分归档')
   })
+
+  it('does not render placeholder reason text for non-candidate rows', async () => {
+    const router = await createTestRouter('/sources/:date', '/sources/2026-03-23', Sources)
+    const wrapper = mount(Sources, {
+      global: {
+        provide: { lang: ref('cn') },
+        plugins: [...testPlugins, router]
+      }
+    })
+
+    await flushPromises()
+
+    const reasons = wrapper.findAll('.tier-reason')
+    expect(reasons).toHaveLength(2)
+    expect(reasons.map((reason) => reason.text())).toEqual(['低分归档', '容量溢出'])
+  })
 })

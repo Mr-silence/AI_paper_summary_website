@@ -396,11 +396,13 @@ async function handleSubscribe() {
 .brand-lockup {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
   padding: 0;
+  margin-left: 20px;
   cursor: pointer;
   color: var(--ink-strong);
+  text-align: center;
 }
 
 .brand-kicker {

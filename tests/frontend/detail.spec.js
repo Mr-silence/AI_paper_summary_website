@@ -35,6 +35,7 @@ describe('Detail view', () => {
     expect(wrapper.text()).toContain('亮点一')
     expect(wrapper.findAll('.fact-block strong')[1].text()).toBe('OpenAI')
     expect(wrapper.text()).not.toContain('候选池')
+    expect(wrapper.text()).not.toContain('返回')
   })
 
   it('summarizes multiple affiliations and keeps the full list in the tooltip', async () => {

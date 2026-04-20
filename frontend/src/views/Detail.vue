@@ -1,9 +1,5 @@
 <template>
   <div class="detail-page">
-    <button class="secondary-button back-button" type="button" @click="$router.back()">
-      {{ lang === 'cn' ? '返回' : 'Back' }}
-    </button>
-
     <div v-if="loading" class="detail-loading">
       <el-skeleton :rows="12" animated />
     </div>
@@ -218,10 +214,6 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 22px;
-}
-
-.back-button {
-  align-self: flex-start;
 }
 
 .detail-loading {
